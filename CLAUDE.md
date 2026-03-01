@@ -44,6 +44,22 @@ This repository contains two npm packages:
 
 When publishing, if the diff includes changes under `src/types/`, MUST publish `types/` package as well. Both packages use the `/publish` skill.
 
+After publishing, MUST add a new entry to the changelog:
+- `CHANGELOG.md` — 2.x releases
+- `CHANGELOG-1.x.md` — 1.x releases
+- `CHANGELOG-0.x.md` — 0.x releases
+
+Entry format:
+```markdown
+## [X.Y.Z](https://github.com/receptron/mulmocast-cli/releases/tag/X.Y.Z) (YYYY-MM-DD)
+
+- **Feature/Fix name**: Description
+
+📦 **npm**: [`mulmocast@X.Y.Z`](https://www.npmjs.com/package/mulmocast/v/X.Y.Z)
+```
+
+Add the new entry at the top (below the header), and include it in the version bump commit.
+
 ## Architecture Overview
 
 ### Core Components
