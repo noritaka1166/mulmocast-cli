@@ -102,7 +102,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.1](https://github.com/receptron/mulmocast-cli/releases/tag/0.1.1) (2025-07-07)
 
-- Peter Lynch: imagePromptとhtmlPromptの両方を交互に使うサンプルです。
+- Peter Lynch: Sample using both imagePrompt and htmlPrompt alternately.
 - add release note : v0.1.0 and update prompt.md
 - Dockerfile
 - Migrate union literal to enum
@@ -120,7 +120,7 @@ All notable changes to this project will be documented in this file.
 ## [0.1.0](https://github.com/receptron/mulmocast-cli/releases/tag/0.1.0) (2025-07-03)
 
 - fix: add missing return statement in interactive scripting mode
-- text2image の provider を beat ごとに指定できるようにしました。
+- Added per-beat text2image provider specification.
 - update error message
 - Text2Image models
 - docs: add --input-file option and mode exclusivity notes to README
@@ -176,7 +176,7 @@ All notable changes to this project will be documented in this file.
 - WIP: aspect fill support
 - raise error if speaker dose not exist.
 - Html canvas size
-- Replicate 経由で text2movie を出来るようにしました。
+- Added text2movie support via Replicate.
 - set default template if it is not interactive mode
 - Vibe coding music video and a few bug fixes
 - docs: add replicate api in dotenv section

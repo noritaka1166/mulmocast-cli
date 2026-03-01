@@ -70,8 +70,8 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.6](https://github.com/receptron/mulmocast-cli/releases/tag/2.2.6) (2026-02-23)
 
-- **Slide Branding**: スライドマスターのようにロゴ・背景画像をグローバル設定し、全スライドに自動適用する機能を追加。per-beatで無効化(`branding: null`)やオーバーライドも可能
-- **bgOpacity**: スライド背景色の透明度を制御し、背景画像を透過表示する`bgOpacity`オプションを追加
+- **Slide Branding**: Global logo and background image settings applied to all slides automatically, like a slide master. Per-beat disable (`branding: null`) and override supported
+- **bgOpacity**: Added `bgOpacity` option to control slide background color opacity, enabling transparent background images
 
 📦 **npm**: [`mulmocast@2.2.6`](https://www.npmjs.com/package/mulmocast/v/2.2.6)
 📦 **npm**: [`@mulmocast/types@2.3.0`](https://www.npmjs.com/package/@mulmocast/types/v/2.3.0)
@@ -79,7 +79,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.2.5](https://github.com/receptron/mulmocast-cli/releases/tag/2.2.5) (2026-02-23)
 
-- **`tool info themes`**: CLI から スライドテーマ情報（テーマ名、色、フォント）を取得可能に (`mulmo tool info themes`)
+- **`tool info themes`**: Retrieve slide theme information (theme name, colors, fonts) from CLI (`mulmo tool info themes`)
 
 📦 **npm**: [`mulmocast@2.2.5`](https://www.npmjs.com/package/mulmocast/v/2.2.5)
 
