@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert";
 import { resolveCombinedStyle } from "../../src/utils/image_plugins/bg_image_util.js";
+import { createMockContext } from "../actions/utils.js";
 
 /**
  * resolveCombinedStyle is the only producer of the CSS that chart, mermaid, markdown and
@@ -13,7 +14,7 @@ import { resolveCombinedStyle } from "../../src/utils/image_plugins/bg_image_uti
  */
 
 const paramsWith = (textSlideStyle: string) => ({
-  context: { studio: { script: {} } },
+  context: createMockContext(),
   textSlideStyle,
 });
 
