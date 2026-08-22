@@ -1,7 +1,8 @@
 import test from "node:test";
+import { createMockContext } from "../actions/utils.js";
 import assert from "node:assert";
 import { requireRenderingPlugin } from "./utils.js";
-import { ImageProcessorParams } from "../../src/types/index.js";
+import type { BeatPathParams } from "../../src/types/index.js";
 import { escapedMermaidTemplateValues, mermaidHtml } from "../../src/utils/image_plugins/mermaid_html.js";
 
 test("mermaid plugin basic functionality", () => {
@@ -14,9 +15,11 @@ test("mermaid plugin path function", () => {
   const plugin = requireRenderingPlugin("mermaid");
   assert(plugin, "mermaid plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/diagram.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
         title: "Test Diagram",
@@ -37,9 +40,11 @@ test("mermaid plugin markdown generation with text code", () => {
   assert(plugin, "mermaid plugin should exist");
   assert(plugin.markdown, "mermaid plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/diagram.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
         title: "Flow Chart",
@@ -60,11 +65,14 @@ test("mermaid plugin markdown generation with simple flowchart", () => {
   assert(plugin, "mermaid plugin should exist");
   assert(plugin.markdown, "mermaid plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/flowchart.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
+        title: "Diagram",
         code: {
           kind: "text",
           text: "flowchart LR\n    A --> B --> C",
@@ -82,11 +90,14 @@ test("mermaid plugin markdown generation with sequence diagram", () => {
   assert(plugin, "mermaid plugin should exist");
   assert(plugin.markdown, "mermaid plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/sequence.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
+        title: "Diagram",
         code: {
           kind: "text",
           text: "sequenceDiagram\n    Alice->>Bob: Hello Bob, how are you?\n    Bob-->>John: How about you John?\n    Bob--x Alice: I am good thanks!",
@@ -107,11 +118,14 @@ test("mermaid plugin markdown generation with class diagram", () => {
   assert(plugin, "mermaid plugin should exist");
   assert(plugin.markdown, "mermaid plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/class.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
+        title: "Diagram",
         code: {
           kind: "text",
           text: "classDiagram\n    Animal <|-- Duck\n    Animal <|-- Fish\n    Animal : +int age\n    Animal : +String gender",
@@ -129,12 +143,14 @@ test("mermaid plugin markdown generation with non-text code returns undefined", 
   assert(plugin, "mermaid plugin should exist");
   assert(plugin.markdown, "mermaid plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/diagram.png",
     beat: {
       text: "",
       image: {
         type: "mermaid",
+        title: "Diagram",
         code: {
           kind: "path",
           path: "/path/to/diagram.mmd",
@@ -152,7 +168,8 @@ test("mermaid plugin markdown generation with wrong image type", () => {
   assert(plugin, "mermaid plugin should exist");
   assert(plugin.markdown, "mermaid plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -171,9 +188,11 @@ test("mermaid plugin with gantt chart", () => {
   const plugin = requireRenderingPlugin("mermaid");
   assert(plugin, "mermaid plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/gantt.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
         title: "Project Timeline",
@@ -194,9 +213,11 @@ test("mermaid plugin with pie chart", () => {
   const plugin = requireRenderingPlugin("mermaid");
   assert(plugin, "mermaid plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/pie.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
         title: "Distribution",
@@ -217,11 +238,14 @@ test("mermaid plugin with user journey", () => {
   const plugin = requireRenderingPlugin("mermaid");
   assert(plugin, "mermaid plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/journey.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
+        title: "Diagram",
         code: {
           kind: "text",
           text: "journey\n    title My working day\n    section Go to work\n      Make tea: 5: Me\n      Go upstairs: 3: Me\n      Do work: 1: Me, Cat",
@@ -239,11 +263,14 @@ test("mermaid plugin with empty code", () => {
   const plugin = requireRenderingPlugin("mermaid");
   assert(plugin, "mermaid plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/empty.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
+        title: "Diagram",
         code: {
           kind: "text",
           text: "",

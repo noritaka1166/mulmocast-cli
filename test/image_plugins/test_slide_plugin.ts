@@ -1,7 +1,9 @@
 import test from "node:test";
+import { contextWithSlideTheme } from "../fixtures.js";
+import { createMockContext } from "../actions/utils.js";
 import assert from "node:assert";
 import { requireHtmlPlugin } from "./utils.js";
-import { ImageProcessorParams } from "../../src/types/index.js";
+import type { BeatPathParams } from "../../src/types/index.js";
 
 const validTheme = {
   colors: {
@@ -51,7 +53,8 @@ test("slide plugin path function", () => {
   const plugin = requireHtmlPlugin("slide");
   assert(plugin, "slide plugin should exist");
 
-  const mockParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -61,7 +64,7 @@ test("slide plugin path function", () => {
         slide: { layout: "title", title: "Test" },
       },
     },
-  } as ImageProcessorParams;
+  };
 
   const path = plugin.path(mockParams);
   assert.strictEqual(path, "/test/path/image.png");
@@ -72,7 +75,7 @@ test("slide plugin html uses beat.image.theme when provided", async () => {
   assert(plugin, "slide plugin should exist");
   assert(plugin.html, "slide plugin should have html function");
 
-  const mockParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -82,10 +85,8 @@ test("slide plugin html uses beat.image.theme when provided", async () => {
         slide: { layout: "title", title: "Hello World" },
       },
     },
-    context: {
-      presentationStyle: {},
-    },
-  } as ImageProcessorParams;
+    context: contextWithSlideTheme(),
+  };
 
   const html = await plugin.html(mockParams);
   assert(html, "HTML should be generated");
@@ -98,7 +99,7 @@ test("slide plugin html falls back to slideParams.theme when beat theme is missi
   assert(plugin, "slide plugin should exist");
   assert(plugin.html, "slide plugin should have html function");
 
-  const mockParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -107,14 +108,8 @@ test("slide plugin html falls back to slideParams.theme when beat theme is missi
         slide: { layout: "title", title: "Fallback Test" },
       },
     },
-    context: {
-      presentationStyle: {
-        slideParams: {
-          theme: validTheme,
-        },
-      },
-    },
-  } as ImageProcessorParams;
+    context: contextWithSlideTheme(validTheme),
+  };
 
   const html = await plugin.html(mockParams);
   assert(html, "HTML should be generated");
@@ -127,7 +122,7 @@ test("slide plugin html uses beat theme over slideParams theme (override)", asyn
   assert(plugin, "slide plugin should exist");
   assert(plugin.html, "slide plugin should have html function");
 
-  const mockParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -137,14 +132,8 @@ test("slide plugin html uses beat theme over slideParams theme (override)", asyn
         slide: { layout: "title", title: "Override Test" },
       },
     },
-    context: {
-      presentationStyle: {
-        slideParams: {
-          theme: validTheme,
-        },
-      },
-    },
-  } as ImageProcessorParams;
+    context: contextWithSlideTheme(validTheme),
+  };
 
   const html = await plugin.html(mockParams);
   assert(html, "HTML should be generated");
@@ -157,7 +146,7 @@ test("slide plugin html uses corporate theme as default when both themes are mis
   assert(plugin, "slide plugin should exist");
   assert(plugin.html, "slide plugin should have html function");
 
-  const mockParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -166,10 +155,8 @@ test("slide plugin html uses corporate theme as default when both themes are mis
         slide: { layout: "title", title: "No Theme" },
       },
     },
-    context: {
-      presentationStyle: {},
-    },
-  } as ImageProcessorParams;
+    context: contextWithSlideTheme(),
+  };
 
   const html = await plugin.html(mockParams);
   assert(html, "HTML should be generated with default corporate theme");
@@ -181,7 +168,7 @@ test("slide plugin html returns undefined for non-slide beat", async () => {
   assert(plugin, "slide plugin should exist");
   assert(plugin.html, "slide plugin should have html function");
 
-  const mockParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -190,10 +177,8 @@ test("slide plugin html returns undefined for non-slide beat", async () => {
         slide: { title: "Not a slide" },
       },
     },
-    context: {
-      presentationStyle: {},
-    },
-  } as ImageProcessorParams;
+    context: contextWithSlideTheme(),
+  };
 
   const html = await plugin.html(mockParams);
   assert.strictEqual(html, undefined);

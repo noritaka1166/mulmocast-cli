@@ -1,4 +1,5 @@
 import test from "node:test";
+import { createMockContext } from "../actions/utils.js";
 import type { MulmoBeat } from "../../src/types/index.js";
 import assert from "node:assert";
 import { chartHtml, escapedChartTemplateValues, resolveChartPlugins, stringifyChartData } from "../../src/utils/image_plugins/chart_html.js";
@@ -106,7 +107,7 @@ test("prototype member names resolve to no plugin", () => {
 });
 
 test("the plugin passes the beat straight through to the renderer", async () => {
-  const html = await chartPluginHtml()({ beat: { text: "", image: { type: "chart", title: "Revenue", chartData: CHART_DATA } } });
+  const html = await chartPluginHtml()({ beat: { text: "", image: { type: "chart", title: "Revenue", chartData: CHART_DATA } }, context: createMockContext() });
   assert.ok(html, "a chart beat must produce html");
 
   const id = html.match(/<canvas id="([^"]*)">/)?.[1];
@@ -123,16 +124,21 @@ test("chart data is serialized before the title is read", async () => {
   const cyclic: Record<string, unknown> = { type: "bar" };
   cyclic.self = cyclic;
   const read: string[] = [];
-  const image = {
-    type: "chart",
-    chartData: cyclic,
-    get title(): string {
-      read.push("title");
-      return "T";
+  // Annotated rather than asserted: the annotation is what narrows `type` to the literal,
+  // and it also checks the getter against the shape the schema declares.
+  const beat: MulmoBeat = {
+    text: "",
+    image: {
+      type: "chart",
+      chartData: cyclic,
+      get title(): string {
+        read.push("title");
+        return "T";
+      },
     },
   };
 
-  await assert.rejects(() => Promise.resolve(html({ beat: { text: "", image } })), /circular structure/);
+  await assert.rejects(() => Promise.resolve(html({ beat, context: createMockContext() })), /circular structure/);
   assert.deepStrictEqual(read, [], "the title must not be read once serialization has thrown");
 });
 
@@ -142,9 +148,9 @@ test("stringifyChartData pretty-prints with two spaces", () => {
 
 test("the plugin declines beats that are not charts", async () => {
   const html = chartPluginHtml();
-  assert.strictEqual(await html({ beat: { text: "" } }), undefined);
-  assert.strictEqual(await html({ beat: { text: "", image: undefined } }), undefined);
-  assert.strictEqual(await html({ beat: { text: "", image: { type: "markdown", markdown: "x" } } }), undefined);
+  assert.strictEqual(await html({ beat: { text: "" }, context: createMockContext() }), undefined);
+  assert.strictEqual(await html({ beat: { text: "", image: undefined }, context: createMockContext() }), undefined);
+  assert.strictEqual(await html({ beat: { text: "", image: { type: "markdown", markdown: "x" } }, context: createMockContext() }), undefined);
 });
 
 // generateUniqueId returns the literal "id" under NODE_ENV=test, which is what CI sets, so
@@ -155,7 +161,7 @@ test("each call gets its own chart-prefixed id", async () => {
   delete process.env.NODE_ENV;
   try {
     const beat: MulmoBeat = { text: "", image: { type: "chart", title: "t", chartData: {} } };
-    const ids = await Promise.all([0, 1, 2].map(async () => (await html({ beat }))?.match(/<canvas id="([^"]*)">/)?.[1]));
+    const ids = await Promise.all([0, 1, 2].map(async () => (await html({ beat, context: createMockContext() }))?.match(/<canvas id="([^"]*)">/)?.[1]));
     ids.forEach((id) => assert.match(id ?? "", /^chart-[0-9a-f]{8}$/));
     assert.strictEqual(new Set(ids).size, 3, `ids must be unique, got ${JSON.stringify(ids)}`);
   } finally {
