@@ -23,13 +23,9 @@ test("test imagePlugin markdown - markdown method with array", async () => {
   const result = plugin.markdown(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "# Title\n\n- Item 1\n- Item 2");
 
   const htmlResult = await plugin.html(imageProcessorParams({ beat }));
-
-  assert.ok(htmlResult !== undefined, "the renderer must produce output");
 
   assert.ok(htmlResult !== undefined, "the renderer must produce output");
   assert.equal(htmlResult, ["<h1>Title</h1>", "<ul>", "<li>Item 1</li>", "<li>Item 2</li>", "</ul>"].join("\n") + "\n");
@@ -48,8 +44,6 @@ test("test imagePlugin markdown - markdown method with string", async () => {
   const result = plugin.markdown(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "# Single Title\n\nParagraph text");
 });
 
@@ -66,8 +60,6 @@ test("test imagePlugin markdown - html method converts markdown to html", async 
   const result = await plugin.html(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert(result.includes("<h1>"));
   assert(result.includes("<strong>Bold text</strong>"));
 });
@@ -78,7 +70,7 @@ test("test imagePlugin markdown - methods with wrong type", async () => {
     text: "",
     image: {
       type: "html_tailwind",
-      markdown: "# Test",
+      html: "<div>Test</div>",
     },
   };
 
@@ -119,8 +111,6 @@ test("test imagePlugin textSlide - markdown method with slide data", async () =>
   const result = plugin.markdown(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "# Main Title\n## Subtitle Here\n- First bullet\n- Second bullet\n- Third bullet");
 });
 
@@ -139,8 +129,6 @@ test("test imagePlugin textSlide - markdown method with only title", async () =>
   const result = plugin.markdown(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "# Only Title\n");
 });
 
@@ -151,14 +139,15 @@ test("test imagePlugin textSlide - markdown method with bullets only", async () 
     image: {
       type: "textSlide",
       slide: {
+        // The schema requires a title; the renderer treats an empty one as absent
+        // (`slide.title ? ... : ""`), which is the branch this test covers.
+        title: "",
         bullets: ["Item 1", "Item 2"],
       },
     },
   };
 
   const result = plugin.markdown(imageProcessorParams({ beat }));
-
-  assert.ok(result !== undefined, "the renderer must produce output");
 
   assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "- Item 1\n- Item 2");
@@ -180,8 +169,6 @@ test("test imagePlugin textSlide - html method converts slide to html", async ()
   const result = await plugin.html(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert(result.includes("<h1>Test Title</h1>"));
   assert(result.includes("<strong>Bold item</strong>"));
 });
@@ -189,8 +176,10 @@ test("test imagePlugin textSlide - html method converts slide to html", async ()
 test("test imagePlugin mermaid - markdown method with text code", async () => {
   const plugin = requireRenderingPlugin("mermaid");
   const beat: MulmoBeat = {
+    text: "",
     image: {
       type: "mermaid",
+      title: "Diagram",
       code: {
         kind: "text",
         text: "graph TD\n  A --> B",
@@ -199,8 +188,6 @@ test("test imagePlugin mermaid - markdown method with text code", async () => {
   };
 
   const result = plugin.markdown(imageProcessorParams({ beat }));
-
-  assert.ok(result !== undefined, "the renderer must produce output");
 
   assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "```mermaid\ngraph TD\n  A --> B\n```");
@@ -212,6 +199,7 @@ test("test imagePlugin mermaid - markdown method with non-text code", async () =
     text: "",
     image: {
       type: "mermaid",
+      title: "Diagram",
       code: {
         kind: "url",
         url: "https://example.com",
@@ -227,12 +215,11 @@ test("test imagePlugin mermaid - markdown method with non-text code", async () =
 test("test imagePlugin mermaid - markdown method with wrong type", async () => {
   const plugin = requireRenderingPlugin("mermaid");
   const beat: MulmoBeat = {
+    text: "",
     image: {
       type: "chart",
-      code: {
-        kind: "text",
-        text: "graph TD\n  A --> B",
-      },
+      title: "Chart",
+      chartData: { type: "bar", data: { labels: ["A"], datasets: [{ data: [1] }] } },
     },
   };
 
@@ -257,13 +244,9 @@ test("test imagePlugin markdown - markdown method with object", async () => {
   const result = plugin.markdown(imageProcessorParams({ beat }));
 
   assert.ok(result !== undefined, "the renderer must produce output");
-
-  assert.ok(result !== undefined, "the renderer must produce output");
   assert.equal(result, "# Title\n\n- Item 1\n- Item 2");
 
   const htmlResult = await plugin.html(imageProcessorParams({ beat }));
-
-  assert.ok(htmlResult !== undefined, "the renderer must produce output");
 
   assert.ok(htmlResult !== undefined, "the renderer must produce output");
   assert(htmlResult.includes("<h1>Title</h1>"));
