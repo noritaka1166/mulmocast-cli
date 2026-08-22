@@ -1,4 +1,5 @@
 import type { ImageProcessorParams, MulmoBeat, MulmoStudioContext } from "../src/types/index.js";
+import type { SlideTheme } from "@mulmocast/deck";
 import { createMockContext } from "./actions/utils.js";
 
 /**
@@ -31,4 +32,17 @@ export const imageProcessorParams = (params: Partial<ImageProcessorParams> & { b
 export const contextWithDir = (mulmoFileDirPath: string): MulmoStudioContext => {
   const context = createMockContext();
   return { ...context, fileDirs: { ...context.fileDirs, mulmoFileDirPath } };
+};
+
+/**
+ * The mock context with a slide theme, or without one.
+ *
+ * The mock's `presentationStyle` carries only `imageParams`, so it is already the
+ * "no slide theme configured" case the fallback tests want; passing a theme adds the one
+ * field those tests vary. The literals these replaced were not `MulmoStudioContext` at all
+ * and only compiled behind an `as`.
+ */
+export const contextWithSlideTheme = (theme?: SlideTheme): MulmoStudioContext => {
+  const context = createMockContext();
+  return theme ? { ...context, presentationStyle: { ...context.presentationStyle, slideParams: { theme } } } : context;
 };

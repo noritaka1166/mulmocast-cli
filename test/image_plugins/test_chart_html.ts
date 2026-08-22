@@ -124,16 +124,21 @@ test("chart data is serialized before the title is read", async () => {
   const cyclic: Record<string, unknown> = { type: "bar" };
   cyclic.self = cyclic;
   const read: string[] = [];
-  const image = {
-    type: "chart" as const,
-    chartData: cyclic,
-    get title(): string {
-      read.push("title");
-      return "T";
+  // Annotated rather than asserted: the annotation is what narrows `type` to the literal,
+  // and it also checks the getter against the shape the schema declares.
+  const beat: MulmoBeat = {
+    text: "",
+    image: {
+      type: "chart",
+      chartData: cyclic,
+      get title(): string {
+        read.push("title");
+        return "T";
+      },
     },
   };
 
-  await assert.rejects(() => Promise.resolve(html({ beat: { text: "", image }, context: createMockContext() })), /circular structure/);
+  await assert.rejects(() => Promise.resolve(html({ beat, context: createMockContext() })), /circular structure/);
   assert.deepStrictEqual(read, [], "the title must not be read once serialization has thrown");
 });
 

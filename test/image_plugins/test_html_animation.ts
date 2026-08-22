@@ -178,25 +178,21 @@ test("mulmoHtmlTailwindMediaSchema - animation: false is rejected by schema", ()
   assert(!result.success, "should reject animation: false");
 });
 
-test("html_tailwind plugin - animation: false treated as static", () => {
+// `path` is parrotingImagePath: it answers `imagePath` whatever the beat says, so it cannot
+// distinguish an animated beat from a static one. The previous version of this test claimed
+// it could — it passed just as well with `animation: true`, which is how it was found. The
+// png-vs-mp4 choice belongs to the caller, from isAnimatedHtmlTailwind.
+test("html_tailwind plugin - path returns the given path, animated or not", () => {
   const plugin = requireHtmlPlugin("html_tailwind");
-  assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: BeatPathParams = {
+  const params = (animation: true | undefined): BeatPathParams => ({
     context: createMockContext(),
     imagePath: "/test/path/0p.png",
-    beat: {
-      text: "",
-      image: {
-        type: "html_tailwind",
-        html: "<div>Hello</div>",
-        animation: false as unknown as true, // simulate unvalidated input
-      },
-    },
-  };
+    beat: { text: "", image: { type: "html_tailwind", html: "<div>Hello</div>", animation } },
+  });
 
-  const path = plugin.path(mockParams);
-  assert.strictEqual(path, "/test/path/0p.png", "should return png path for animation: false");
+  assert.strictEqual(plugin.path(params(undefined)), "/test/path/0p.png");
+  assert.strictEqual(plugin.path(params(true)), "/test/path/0p.png", "an animated beat gets the same answer");
 });
 
 // === isAnimatedHtmlTailwind tests ===
@@ -216,9 +212,12 @@ test("isAnimatedHtmlTailwind - false for undefined animation", () => {
   assert.strictEqual(MulmoBeatMethods.isAnimatedHtmlTailwind(beat), false);
 });
 
-test("isAnimatedHtmlTailwind - false for animation: false (unvalidated)", () => {
-  const beat: MulmoBeat = { text: "", image: { type: "html_tailwind" as const, html: "<div></div>", animation: false as unknown as true } };
-  assert.strictEqual(MulmoBeatMethods.isAnimatedHtmlTailwind(beat), false);
+// `animation: false` cannot exist on a parsed beat — the schema is `true | {fps, movie}` —
+// so the beat-level function cannot be handed one without forcing the type. The decision it
+// delegates to takes `unknown` precisely because the field arrives unvalidated, and that is
+// where this case belongs.
+test("isAnimationEnabled - false for an unvalidated animation: false", () => {
+  assert.strictEqual(MulmoBeatMethods.isAnimationEnabled(false), false);
 });
 
 test("isAnimatedHtmlTailwind - false for non-html_tailwind type", () => {
