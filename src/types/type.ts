@@ -161,6 +161,16 @@ export type ImageProcessorParams = {
   beatDuration?: number; // Computed duration: beat.duration ?? studioBeat.duration (audio-derived)
 };
 
+/**
+ * What a plugin's `markdown()` / `html()` reads. They return a string and touch no file, so
+ * the paths and sizes `process()` needs are not theirs. `imageRefs` is here because a slide
+ * resolves image references while rendering; it is optional, so a caller with none omits it.
+ */
+export type BeatRenderParams = Pick<ImageProcessorParams, "beat" | "context" | "imageRefs">;
+
+/** What a plugin's `path()` reads: the source-backed ones resolve against beat and context. */
+export type BeatPathParams = Pick<ImageProcessorParams, "beat" | "context" | "imagePath">;
+
 export type PDFMode = (typeof pdf_modes)[number];
 export type PDFSize = (typeof pdf_sizes)[number];
 

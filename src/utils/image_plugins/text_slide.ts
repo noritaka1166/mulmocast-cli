@@ -1,4 +1,4 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
 import { renderMarkdownToImage } from "../html_render.js";
 import { parrotingImagePath } from "./utils.js";
 import { resolveCombinedStyle } from "./bg_image_util.js";
@@ -26,7 +26,7 @@ const processTextSlide = async (params: ImageProcessorParams) => {
   return imagePath;
 };
 
-const dumpMarkdown = (params: ImageProcessorParams) => {
+const dumpMarkdown = (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
   const slide = beat.image.slide;
@@ -36,7 +36,7 @@ const dumpMarkdown = (params: ImageProcessorParams) => {
   return `${titleString}${subtitleString}${bulletsString}`;
 };
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const markdown = dumpMarkdown(params);
   return await marked.parse(markdown ?? "");
 };

@@ -9,14 +9,14 @@ import * as pluginBeat from "./beat.js";
 import * as pluginVoiceOver from "./voice_over.js";
 import * as pluginVision from "./vision.js";
 import * as pluginSlide from "./slide.js";
-import { ImageProcessorParams, MulmoBeat } from "../../types/index.js";
+import { BeatPathParams, BeatRenderParams, ImageProcessorParams, MulmoBeat } from "../../types/index.js";
 
 const imagePlugins: {
   imageType: string;
   process: (params: ImageProcessorParams) => Promise<string | undefined> | void;
-  path: (params: ImageProcessorParams) => string | undefined;
-  markdown?: (params: ImageProcessorParams) => string | undefined;
-  html?: (params: ImageProcessorParams) => Promise<string | undefined>;
+  path: (params: BeatPathParams) => string | undefined;
+  markdown?: (params: BeatRenderParams) => string | undefined;
+  html?: (params: BeatRenderParams) => Promise<string | undefined>;
 }[] = [
   pluginTextSlide,
   pluginMarkdown,

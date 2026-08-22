@@ -1,4 +1,4 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
 import { MulmoMediaSourceMethods } from "../../methods/index.js";
 import { getHTMLFile } from "../file.js";
 import { renderHTMLToImage, interpolate } from "../html_render.js";
@@ -32,14 +32,14 @@ const processMermaid = async (params: ImageProcessorParams) => {
   return imagePath;
 };
 
-const dumpMarkdown = (params: ImageProcessorParams) => {
+const dumpMarkdown = (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
   if (beat.image.code.kind !== "text") return; // support only text for now
   return `\`\`\`mermaid\n${beat.image.code.text}\n\`\`\``;
 };
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
 

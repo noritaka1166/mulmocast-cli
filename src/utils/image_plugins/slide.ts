@@ -1,6 +1,6 @@
 import nodePath from "node:path";
 import { pathToFileURL } from "node:url";
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
 import { generateSlideHTML } from "@mulmocast/deck";
 import type { SlideLayout, SlideTheme, ContentBlock, MulmoSlideMedia, SlideBranding, ResolvedBranding } from "@mulmocast/deck";
 import { renderHTMLToImage } from "../html_render.js";
@@ -94,7 +94,7 @@ export const resolveSlideImageRefs = (
   return cloned;
 };
 
-const resolveTheme = (params: ImageProcessorParams): SlideTheme => {
+const resolveTheme = (params: BeatRenderParams): SlideTheme => {
   const { beat, context } = params;
   if (!beat.image || beat.image.type !== imageType) {
     throw new Error("resolveTheme called on non-slide beat");
@@ -107,7 +107,7 @@ const resolveTheme = (params: ImageProcessorParams): SlideTheme => {
   return MulmoPresentationStyleMethods.getResolvedSlideTheme(context.presentationStyle, beat);
 };
 
-const resolveSlide = (params: ImageProcessorParams, converter: (filePath: string) => string = pathToDataUrl): SlideLayout => {
+const resolveSlide = (params: BeatRenderParams, converter: (filePath: string) => string = pathToDataUrl): SlideLayout => {
   const { beat, imageRefs } = params;
   if (!beat.image || beat.image.type !== imageType) {
     throw new Error("resolveSlide called on non-slide beat");
@@ -125,7 +125,7 @@ const resolveSlide = (params: ImageProcessorParams, converter: (filePath: string
  * - beat.image.branding defined → use it
  * - otherwise → fall back to slideParams.branding
  */
-const resolveBranding = (params: ImageProcessorParams): SlideBranding | undefined => {
+const resolveBranding = (params: BeatRenderParams): SlideBranding | undefined => {
   const { beat, context } = params;
   if (!beat.image || beat.image.type !== imageType) return undefined;
   const beatBranding = (beat.image as MulmoSlideMedia).branding;
@@ -137,7 +137,7 @@ const resolveBranding = (params: ImageProcessorParams): SlideBranding | undefine
 /**
  * Convert SlideBranding to ResolvedBranding (all sources → data URLs).
  */
-const convertBrandingToResolved = async (branding: SlideBranding, params: ImageProcessorParams): Promise<ResolvedBranding> => {
+const convertBrandingToResolved = async (branding: SlideBranding, params: BeatRenderParams): Promise<ResolvedBranding> => {
   const { context } = params;
   const resolved: ResolvedBranding = {};
 
@@ -163,7 +163,7 @@ const convertBrandingToResolved = async (branding: SlideBranding, params: ImageP
   return resolved;
 };
 
-const resolveAndConvertBranding = async (params: ImageProcessorParams): Promise<ResolvedBranding | undefined> => {
+const resolveAndConvertBranding = async (params: BeatRenderParams): Promise<ResolvedBranding | undefined> => {
   const branding = resolveBranding(params);
   return branding ? await convertBrandingToResolved(branding, params) : undefined;
 };
@@ -181,7 +181,7 @@ const processSlide = async (params: ImageProcessorParams) => {
   return imagePath;
 };
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
 

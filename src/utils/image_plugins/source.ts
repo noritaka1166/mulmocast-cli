@@ -1,4 +1,4 @@
-import { type ImageProcessorParams, type ImageType } from "../../types/index.js";
+import { BeatPathParams, type ImageProcessorParams, type ImageType } from "../../types/index.js";
 import { MulmoMediaSourceMethods } from "../../methods/mulmo_media_source.js";
 
 export const processSource = (imageType: ImageType) => {
@@ -11,7 +11,7 @@ export const processSource = (imageType: ImageType) => {
 };
 
 export const pathSource = (imageType: ImageType) => {
-  return (params: ImageProcessorParams) => {
+  return (params: BeatPathParams) => {
     const { beat, context } = params;
     if (!beat?.image || beat.image.type !== imageType) return;
     if (beat.image?.type == "image" || beat.image?.type == "movie") {

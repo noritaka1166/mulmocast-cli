@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import nodePath from "node:path";
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
 import { MulmoBeatMethods } from "../../methods/mulmo_beat.js";
 import { getHTMLFile, getJSFile } from "../file.js";
 import { renderHTMLToImage, interpolate, renderHTMLToFrames, renderHTMLToVideo, renderHTMLToFinalFrame } from "../html_render.js";
@@ -249,7 +249,7 @@ const processHtmlTailwind = async (params: ImageProcessorParams) => {
   return processHtmlTailwindStatic(params);
 };
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
   return htmlTailwindMarkup(beat.image);

@@ -1,4 +1,4 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
 import { parrotingImagePath } from "./utils.js";
 import { htmlPlugin, templateNameTofunctionName } from "mulmocast-vision";
 import { resolve as resolvePath } from "path";
@@ -21,7 +21,7 @@ const processVision = async (params: ImageProcessorParams) => {
   return imagePath;
 };
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const { beat, context } = params;
 
   const rootDir = context.fileDirs.nodeModuleRootPath ? resolvePath(context.fileDirs.nodeModuleRootPath, "mulmocast-vision") : undefined;
