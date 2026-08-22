@@ -1,4 +1,5 @@
 import test from "node:test";
+import type { MulmoBeat } from "../../src/types/index.js";
 import assert from "node:assert";
 import { chartHtml, escapedChartTemplateValues, resolveChartPlugins, stringifyChartData } from "../../src/utils/image_plugins/chart_html.js";
 import { requireImagePlugin } from "./utils.js";
@@ -105,7 +106,7 @@ test("prototype member names resolve to no plugin", () => {
 });
 
 test("the plugin passes the beat straight through to the renderer", async () => {
-  const html = await chartPluginHtml()({ beat: { image: { type: "chart", title: "Revenue", chartData: CHART_DATA } } });
+  const html = await chartPluginHtml()({ beat: { text: "", image: { type: "chart", title: "Revenue", chartData: CHART_DATA } } });
   assert.ok(html, "a chart beat must produce html");
 
   const id = html.match(/<canvas id="([^"]*)">/)?.[1];
@@ -131,7 +132,7 @@ test("chart data is serialized before the title is read", async () => {
     },
   };
 
-  await assert.rejects(() => Promise.resolve(html({ beat: { image } })), /circular structure/);
+  await assert.rejects(() => Promise.resolve(html({ beat: { text: "", image } })), /circular structure/);
   assert.deepStrictEqual(read, [], "the title must not be read once serialization has thrown");
 });
 
@@ -141,9 +142,9 @@ test("stringifyChartData pretty-prints with two spaces", () => {
 
 test("the plugin declines beats that are not charts", async () => {
   const html = chartPluginHtml();
-  assert.strictEqual(await html({ beat: {} }), undefined);
-  assert.strictEqual(await html({ beat: { image: undefined } }), undefined);
-  assert.strictEqual(await html({ beat: { image: { type: "markdown", markdown: "x" } } }), undefined);
+  assert.strictEqual(await html({ beat: { text: "" } }), undefined);
+  assert.strictEqual(await html({ beat: { text: "", image: undefined } }), undefined);
+  assert.strictEqual(await html({ beat: { text: "", image: { type: "markdown", markdown: "x" } } }), undefined);
 });
 
 // generateUniqueId returns the literal "id" under NODE_ENV=test, which is what CI sets, so
@@ -153,7 +154,7 @@ test("each call gets its own chart-prefixed id", async () => {
   const saved = process.env.NODE_ENV;
   delete process.env.NODE_ENV;
   try {
-    const beat = { image: { type: "chart", title: "t", chartData: {} } };
+    const beat: MulmoBeat = { text: "", image: { type: "chart", title: "t", chartData: {} } };
     const ids = await Promise.all([0, 1, 2].map(async () => (await html({ beat }))?.match(/<canvas id="([^"]*)">/)?.[1]));
     ids.forEach((id) => assert.match(id ?? "", /^chart-[0-9a-f]{8}$/));
     assert.strictEqual(new Set(ids).size, 3, `ids must be unique, got ${JSON.stringify(ids)}`);

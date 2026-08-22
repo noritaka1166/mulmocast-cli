@@ -132,6 +132,7 @@ test("mermaid plugin markdown generation with non-text code returns undefined", 
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/diagram.png",
     beat: {
+      text: "",
       image: {
         type: "mermaid",
         code: {
@@ -154,6 +155,7 @@ test("mermaid plugin markdown generation with wrong image type", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: { title: "Not mermaid" },

@@ -1,4 +1,5 @@
 import test from "node:test";
+import type { MulmoBeat } from "../../src/types/index.js";
 import assert from "node:assert";
 import { requireHtmlPlugin } from "./utils.js";
 import { mulmoHtmlTailwindMediaSchema, htmlTailwindAnimationSchema } from "../../src/types/schema.js";
@@ -82,6 +83,7 @@ test("html_tailwind plugin - static beat returns correct path", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/0p.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "<div>Hello</div>",
@@ -101,6 +103,7 @@ test("html_tailwind plugin - animated beat returns correct path (parrotingImageP
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/0p_animated.mp4",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "<div>Hello</div>",
@@ -121,6 +124,7 @@ test("html_tailwind plugin - html dump works for static beat", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/0p.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "<div>Hello</div>",
@@ -140,6 +144,7 @@ test("html_tailwind plugin - html dump works for animated beat", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/0p_animated.mp4",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: ["<div id='title'>Hello</div>", "<script>function render(f){}</script>"],
@@ -175,6 +180,7 @@ test("html_tailwind plugin - animation: false treated as static", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/0p.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "<div>Hello</div>",
@@ -205,7 +211,7 @@ test("isAnimatedHtmlTailwind - false for undefined animation", () => {
 });
 
 test("isAnimatedHtmlTailwind - false for animation: false (unvalidated)", () => {
-  const beat = { text: "", image: { type: "html_tailwind" as const, html: "<div></div>", animation: false as unknown as true } };
+  const beat: MulmoBeat = { text: "", image: { type: "html_tailwind" as const, html: "<div></div>", animation: false as unknown as true } };
   assert.strictEqual(MulmoBeatMethods.isAnimatedHtmlTailwind(beat), false);
 });
 

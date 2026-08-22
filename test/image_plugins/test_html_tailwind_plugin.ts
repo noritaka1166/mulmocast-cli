@@ -16,6 +16,7 @@ test("html_tailwind plugin path function", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/tailwind.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "<div class='bg-blue-500 text-white p-4'>Hello World</div>",
@@ -35,6 +36,7 @@ test("html_tailwind plugin html generation with string html", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/tailwind.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "<div class='container mx-auto p-4'><h1 class='text-2xl font-bold'>Title</h1><p class='text-gray-600'>Description</p></div>",
@@ -54,6 +56,7 @@ test("html_tailwind plugin html generation with array html", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/tailwind.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: [
@@ -88,6 +91,7 @@ test("html_tailwind plugin with complex tailwind classes", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/complex.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: [
@@ -121,6 +125,7 @@ test("html_tailwind plugin with form elements", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/form.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: `
@@ -162,6 +167,7 @@ test("html_tailwind plugin with grid layout", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/grid.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: [
@@ -198,6 +204,7 @@ test("html_tailwind plugin with empty html string", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/empty.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: "",
@@ -216,6 +223,7 @@ test("html_tailwind plugin with empty html array", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/empty-array.png",
     beat: {
+      text: "",
       image: {
         type: "html_tailwind",
         html: [],

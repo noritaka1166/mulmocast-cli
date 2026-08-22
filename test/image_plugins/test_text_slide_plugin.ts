@@ -16,6 +16,7 @@ test("text_slide plugin path function", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {
@@ -37,6 +38,7 @@ test("text_slide plugin markdown generation with title only", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {
@@ -58,6 +60,7 @@ test("text_slide plugin markdown generation with title and subtitle", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {
@@ -80,6 +83,7 @@ test("text_slide plugin markdown generation with title, subtitle, and bullets", 
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {
@@ -103,6 +107,7 @@ test("text_slide plugin markdown generation with bullets only", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {
@@ -124,6 +129,7 @@ test("text_slide plugin markdown generation with empty slide", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {},
@@ -143,6 +149,7 @@ test("text_slide plugin html generation", async () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: {

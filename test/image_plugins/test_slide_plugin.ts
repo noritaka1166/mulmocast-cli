@@ -54,6 +54,7 @@ test("slide plugin path function", () => {
   const mockParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "slide",
         theme: validTheme,
@@ -74,6 +75,7 @@ test("slide plugin html uses beat.image.theme when provided", async () => {
   const mockParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "slide",
         theme: validTheme,
@@ -99,6 +101,7 @@ test("slide plugin html falls back to slideParams.theme when beat theme is missi
   const mockParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "slide",
         slide: { layout: "title", title: "Fallback Test" },
@@ -127,6 +130,7 @@ test("slide plugin html uses beat theme over slideParams theme (override)", asyn
   const mockParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "slide",
         theme: altTheme,
@@ -156,6 +160,7 @@ test("slide plugin html uses corporate theme as default when both themes are mis
   const mockParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "slide",
         slide: { layout: "title", title: "No Theme" },
@@ -179,6 +184,7 @@ test("slide plugin html returns undefined for non-slide beat", async () => {
   const mockParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: { title: "Not a slide" },
