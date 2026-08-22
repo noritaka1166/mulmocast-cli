@@ -1,7 +1,8 @@
 import test from "node:test";
+import { createMockContext } from "../actions/utils.js";
 import assert from "node:assert";
 import { requireRenderingPlugin } from "./utils.js";
-import { ImageProcessorParams } from "../../src/types/index.js";
+import type { BeatPathParams } from "../../src/types/index.js";
 
 test("text_slide plugin basic functionality", () => {
   const plugin = requireRenderingPlugin("textSlide");
@@ -13,7 +14,8 @@ test("text_slide plugin path function", () => {
   const plugin = requireRenderingPlugin("textSlide");
   assert(plugin, "textSlide plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -35,7 +37,8 @@ test("text_slide plugin markdown generation with title only", () => {
   assert(plugin, "textSlide plugin should exist");
   assert(plugin.markdown, "textSlide plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -57,7 +60,8 @@ test("text_slide plugin markdown generation with title and subtitle", () => {
   assert(plugin, "textSlide plugin should exist");
   assert(plugin.markdown, "textSlide plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -80,7 +84,8 @@ test("text_slide plugin markdown generation with title, subtitle, and bullets", 
   assert(plugin, "textSlide plugin should exist");
   assert(plugin.markdown, "textSlide plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -104,13 +109,17 @@ test("text_slide plugin markdown generation with bullets only", () => {
   assert(plugin, "textSlide plugin should exist");
   assert(plugin.markdown, "textSlide plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
       image: {
         type: "textSlide",
         slide: {
+          // The schema requires a title; the renderer treats an empty one as absent
+          // (`slide.title ? ... : ""`), which is the branch this test covers.
+          title: "",
           bullets: ["Bullet A", "Bullet B"],
         },
       },
@@ -126,13 +135,16 @@ test("text_slide plugin markdown generation with empty slide", () => {
   assert(plugin, "textSlide plugin should exist");
   assert(plugin.markdown, "textSlide plugin should have markdown function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
       image: {
         type: "textSlide",
-        slide: {},
+        // Same as above: an empty title is how "no title" is expressed to a schema
+        // that requires the field.
+        slide: { title: "" },
       },
     },
   };
@@ -146,7 +158,8 @@ test("text_slide plugin html generation", async () => {
   assert(plugin, "textSlide plugin should exist");
   assert(plugin.html, "textSlide plugin should have html function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",

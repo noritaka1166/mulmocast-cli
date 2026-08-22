@@ -1,7 +1,8 @@
 import test from "node:test";
+import { createMockContext } from "../actions/utils.js";
 import assert from "node:assert";
 import { requireHtmlPlugin } from "./utils.js";
-import { ImageProcessorParams } from "../../src/types/index.js";
+import type { BeatPathParams } from "../../src/types/index.js";
 
 test("html_tailwind plugin basic functionality", () => {
   const plugin = requireHtmlPlugin("html_tailwind");
@@ -13,7 +14,8 @@ test("html_tailwind plugin path function", () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/tailwind.png",
     beat: {
       text: "",
@@ -33,7 +35,8 @@ test("html_tailwind plugin html generation with string html", async () => {
   assert(plugin, "html_tailwind plugin should exist");
   assert(plugin.html, "html_tailwind plugin should have html function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/tailwind.png",
     beat: {
       text: "",
@@ -53,7 +56,8 @@ test("html_tailwind plugin html generation with array html", async () => {
   assert(plugin, "html_tailwind plugin should exist");
   assert(plugin.html, "html_tailwind plugin should have html function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/tailwind.png",
     beat: {
       text: "",
@@ -88,7 +92,8 @@ test("html_tailwind plugin with complex tailwind classes", async () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/complex.png",
     beat: {
       text: "",
@@ -122,7 +127,8 @@ test("html_tailwind plugin with form elements", async () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/form.png",
     beat: {
       text: "",
@@ -164,7 +170,8 @@ test("html_tailwind plugin with grid layout", async () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/grid.png",
     beat: {
       text: "",
@@ -201,7 +208,8 @@ test("html_tailwind plugin with empty html string", async () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/empty.png",
     beat: {
       text: "",
@@ -220,7 +228,8 @@ test("html_tailwind plugin with empty html array", async () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/empty-array.png",
     beat: {
       text: "",

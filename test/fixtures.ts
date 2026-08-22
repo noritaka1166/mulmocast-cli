@@ -1,4 +1,4 @@
-import type { ImageProcessorParams, MulmoBeat } from "../src/types/index.js";
+import type { ImageProcessorParams, MulmoBeat, MulmoStudioContext } from "../src/types/index.js";
 import { createMockContext } from "./actions/utils.js";
 
 /**
@@ -20,3 +20,15 @@ export const imageProcessorParams = (params: Partial<ImageProcessorParams> & { b
   canvasSize: { width: 1280, height: 720 },
   ...params,
 });
+
+/**
+ * The mock context with a specific `mulmoFileDirPath`.
+ *
+ * Source-backed plugins resolve a relative path against that one field, so the tests used to
+ * build `{ fileDirs: { mulmoFileDirPath } }` and nothing else — which is not a
+ * `MulmoStudioContext`. The rest of the mock is inert for these plugins.
+ */
+export const contextWithDir = (mulmoFileDirPath: string): MulmoStudioContext => {
+  const context = createMockContext();
+  return { ...context, fileDirs: { ...context.fileDirs, mulmoFileDirPath } };
+};

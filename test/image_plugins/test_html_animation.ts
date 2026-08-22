@@ -1,11 +1,12 @@
 import test from "node:test";
-import type { MulmoBeat } from "../../src/types/index.js";
+import { createMockContext } from "../actions/utils.js";
+import type { BeatPathParams } from "../../src/types/index.js";
 import assert from "node:assert";
 import { requireHtmlPlugin } from "./utils.js";
 import { mulmoHtmlTailwindMediaSchema, htmlTailwindAnimationSchema } from "../../src/types/schema.js";
 import { normalizeEvenDimensions } from "../../src/utils/ffmpeg_utils.js";
 import { MulmoBeatMethods } from "../../src/methods/index.js";
-import type { ImageProcessorParams, MulmoBeat } from "../../src/types/index.js";
+import type { MulmoBeat } from "../../src/types/index.js";
 
 // === Schema tests ===
 
@@ -80,7 +81,8 @@ test("html_tailwind plugin - static beat returns correct path", () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/0p.png",
     beat: {
       text: "",
@@ -100,7 +102,8 @@ test("html_tailwind plugin - animated beat returns correct path (parrotingImageP
   assert(plugin, "html_tailwind plugin should exist");
 
   // When animated, imagePluginAgent passes the .mp4 path as imagePath
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/0p_animated.mp4",
     beat: {
       text: "",
@@ -121,7 +124,8 @@ test("html_tailwind plugin - html dump works for static beat", async () => {
   assert(plugin, "html_tailwind plugin should exist");
   assert(plugin.html, "html_tailwind plugin should have html function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/0p.png",
     beat: {
       text: "",
@@ -141,7 +145,8 @@ test("html_tailwind plugin - html dump works for animated beat", async () => {
   assert(plugin, "html_tailwind plugin should exist");
   assert(plugin.html, "html_tailwind plugin should have html function");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/0p_animated.mp4",
     beat: {
       text: "",
@@ -177,7 +182,8 @@ test("html_tailwind plugin - animation: false treated as static", () => {
   const plugin = requireHtmlPlugin("html_tailwind");
   assert(plugin, "html_tailwind plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/0p.png",
     beat: {
       text: "",

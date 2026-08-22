@@ -1,8 +1,10 @@
 import test from "node:test";
+import { contextWithDir } from "../fixtures.js";
+import { createMockContext } from "../actions/utils.js";
 import assert from "node:assert";
 import { resolve } from "node:path";
 import { requireImagePlugin } from "./utils.js";
-import { ImageProcessorParams } from "../../src/types/index.js";
+import type { BeatPathParams } from "../../src/types/index.js";
 
 // Image plugin tests
 test("image plugin basic functionality", () => {
@@ -15,7 +17,8 @@ test("image plugin path with URL source", () => {
   const plugin = requireImagePlugin("image");
   assert(plugin, "image plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -37,7 +40,7 @@ test("image plugin path with path source", () => {
   const plugin = requireImagePlugin("image");
   assert(plugin, "image plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -49,11 +52,7 @@ test("image plugin path with path source", () => {
         },
       },
     },
-    context: {
-      fileDirs: {
-        mulmoFileDirPath: "/project",
-      },
-    },
+    context: contextWithDir("/project"),
   };
 
   const path = plugin.path(mockParams);
@@ -64,7 +63,7 @@ test("image plugin path with relative path source", () => {
   const plugin = requireImagePlugin("image");
   assert(plugin, "image plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -76,11 +75,7 @@ test("image plugin path with relative path source", () => {
         },
       },
     },
-    context: {
-      fileDirs: {
-        mulmoFileDirPath: "/home/user/project",
-      },
-    },
+    context: contextWithDir("/home/user/project"),
   };
 
   const path = plugin.path(mockParams);
@@ -91,7 +86,8 @@ test("image plugin path with wrong image type", () => {
   const plugin = requireImagePlugin("image");
   assert(plugin, "image plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -117,7 +113,8 @@ test("movie plugin path with URL source", () => {
   const plugin = requireImagePlugin("movie");
   assert(plugin, "movie plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/movie.png",
     beat: {
       text: "",
@@ -140,7 +137,7 @@ test("movie plugin path with path source", () => {
   const plugin = requireImagePlugin("movie");
   assert(plugin, "movie plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/movie.png",
     beat: {
       text: "",
@@ -152,11 +149,7 @@ test("movie plugin path with path source", () => {
         },
       },
     },
-    context: {
-      fileDirs: {
-        mulmoFileDirPath: "/project",
-      },
-    },
+    context: contextWithDir("/project"),
   };
 
   const path = plugin.path(mockParams);
@@ -167,7 +160,8 @@ test("movie plugin path extension fix", () => {
   const plugin = requireImagePlugin("movie");
   assert(plugin, "movie plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/video.png",
     beat: {
       text: "",
@@ -190,7 +184,8 @@ test("movie plugin path with .mov already in imagePath", () => {
   const plugin = requireImagePlugin("movie");
   assert(plugin, "movie plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/video.mov",
     beat: {
       text: "",
@@ -213,7 +208,8 @@ test("source plugins with no image property", () => {
   const imagePlugin = requireImagePlugin("image");
   const moviePlugin = requireImagePlugin("movie");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
+    context: createMockContext(),
     imagePath: "/test/path/file.png",
     beat: { text: "" },
   };
@@ -228,7 +224,7 @@ test("source plugins with no image property", () => {
 test("source plugins with unknown source kind", () => {
   const imagePlugin = requireImagePlugin("image");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -241,11 +237,7 @@ test("source plugins with unknown source kind", () => {
         },
       },
     },
-    context: {
-      fileDirs: {
-        mulmoFileDirPath: "/project",
-      },
-    },
+    context: contextWithDir("/project"),
   };
 
   const path = imagePlugin?.path(mockParams);
@@ -256,7 +248,7 @@ test("image plugin with absolute path source", () => {
   const plugin = requireImagePlugin("image");
   assert(plugin, "image plugin should exist");
 
-  const mockParams: ImageProcessorParams = {
+  const mockParams: BeatPathParams = {
     imagePath: "/test/path/image.png",
     beat: {
       text: "",
@@ -268,11 +260,7 @@ test("image plugin with absolute path source", () => {
         },
       },
     },
-    context: {
-      fileDirs: {
-        mulmoFileDirPath: "/project",
-      },
-    },
+    context: contextWithDir("/project"),
   };
 
   const path = plugin.path(mockParams);

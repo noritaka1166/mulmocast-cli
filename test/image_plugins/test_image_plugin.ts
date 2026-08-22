@@ -1,5 +1,5 @@
 import { requireImagePlugin } from "./utils.js";
-import { imageProcessorParams } from "../fixtures.js";
+import { imageProcessorParams, contextWithDir } from "../fixtures.js";
 import { resolve } from "node:path";
 
 import test from "node:test";
@@ -9,7 +9,7 @@ test("test imagePlugin mermaid", async () => {
   const plugin = requireImagePlugin("mermaid");
   assert.equal(plugin.imageType, "mermaid");
 
-  const path = plugin.path(imageProcessorParams({ imagePath: "expectImagePath" }));
+  const path = plugin.path(imageProcessorParams({ beat: { text: "" }, imagePath: "expectImagePath" }));
   assert.equal(path, "expectImagePath");
 });
 
@@ -28,7 +28,6 @@ test("test imagePlugin image url", async () => {
         },
       },
     }),
-    {},
   );
   assert.equal(path, "expectImagePath");
 });
@@ -47,7 +46,7 @@ test("test imagePlugin image path", async () => {
           source: { kind: "path", path: "expectImagePath" },
         },
       },
-      context: { fileDirs: { mulmoFileDirPath: "/bin" } },
+      context: contextWithDir("/bin"),
     }),
   );
   assert.equal(path, resolve("/bin", "expectImagePath"));
@@ -57,6 +56,6 @@ test("test imagePlugin beat", async () => {
   const plugin = requireImagePlugin("beat");
   assert.equal(plugin.imageType, "beat");
 
-  const path = plugin.path(imageProcessorParams({ type: "beat", imagePath: "expectImagePath" }));
+  const path = plugin.path(imageProcessorParams({ beat: { text: "", image: { type: "beat" } }, imagePath: "expectImagePath" }));
   assert.strictEqual(path, undefined);
 });

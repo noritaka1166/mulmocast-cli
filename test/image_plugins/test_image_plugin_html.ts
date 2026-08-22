@@ -48,7 +48,7 @@ test("test imagePlugin html_tailwind - html method with wrong type", async () =>
     text: "",
     image: {
       type: "markdown",
-      html: "<div>Test</div>",
+      markdown: "# Test",
     },
   };
 
