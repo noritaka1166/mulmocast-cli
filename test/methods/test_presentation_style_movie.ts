@@ -3,7 +3,7 @@ import assert from "node:assert";
 
 import { MulmoPresentationStyleMethods } from "../../src/methods/mulmo_presentation_style.js";
 import { createMockContext } from "../actions/utils.js";
-import { MulmoStudioContext, MulmoBeat, MulmoPresentationStyle } from "../../src/types/index.js";
+import { MulmoStudioContext, MulmoBeat, MulmoPresentationStyle, MulmoTransition } from "../../src/types/index.js";
 
 const FLOAT_TOLERANCE = 1e-9;
 const approxEqual = (actual: number, expected: number): boolean => Math.abs(actual - expected) < FLOAT_TOLERANCE;
@@ -14,8 +14,8 @@ const frameCheckContext = (beats: Partial<MulmoBeat>[], presentationStyle: Parti
     presentationStyle,
   }) as unknown as MulmoStudioContext;
 
-const transition = (type: string) => ({ movieParams: { transition: { type, duration: 1.0 } } });
-const voiceOver = { image: { type: "voice_over" } };
+const transition = (type: MulmoTransition["type"]) => ({ movieParams: { transition: { type, duration: 1.0 } } });
+const voiceOver: Partial<MulmoBeat> = { image: { type: "voice_over" } };
 
 // --- getNeedFirstFrame ---
 
@@ -121,26 +121,26 @@ test("test getNeedLastFrame on an empty script", async () => {
 
 test("test getFillOption with defaults only", async () => {
   const context = frameCheckContext([]);
-  const result = MulmoPresentationStyleMethods.getFillOption(context, { speaker: "A" });
+  const result = MulmoPresentationStyleMethods.getFillOption(context, { speaker: "A", text: "" });
   assert.equal(result.style, "aspectFit");
 });
 
 test("test getFillOption with global setting", async () => {
   const context = frameCheckContext([], { movieParams: { fillOption: { style: "aspectFill" } } });
-  const result = MulmoPresentationStyleMethods.getFillOption(context, { speaker: "A" });
+  const result = MulmoPresentationStyleMethods.getFillOption(context, { speaker: "A", text: "" });
   assert.equal(result.style, "aspectFill");
 });
 
 test("test getFillOption with beat override", async () => {
   const context = frameCheckContext([], { movieParams: { fillOption: { style: "aspectFill" } } });
-  const beat: MulmoBeat = { speaker: "A", movieParams: { fillOption: { style: "aspectFit" } } };
+  const beat: MulmoBeat = { speaker: "A", text: "", movieParams: { fillOption: { style: "aspectFit" } } };
   const result = MulmoPresentationStyleMethods.getFillOption(context, beat);
   assert.equal(result.style, "aspectFit");
 });
 
 test("test getFillOption with beat override and no global setting", async () => {
   const context = frameCheckContext([]);
-  const beat: MulmoBeat = { speaker: "A", movieParams: { fillOption: { style: "aspectFill" } } };
+  const beat: MulmoBeat = { speaker: "A", text: "", movieParams: { fillOption: { style: "aspectFill" } } };
   const result = MulmoPresentationStyleMethods.getFillOption(context, beat);
   assert.equal(result.style, "aspectFill");
 });
@@ -163,7 +163,7 @@ const createContextWithAudioParams = (audioParamsOverrides: Record<string, unkno
 };
 
 const beatWithText: MulmoBeat = { speaker: "Presenter", text: "Hello" };
-const beatWithoutText: MulmoBeat = { speaker: "Presenter" };
+const beatWithoutText: MulmoBeat = { speaker: "Presenter", text: "" };
 
 test("getMovieVolume: no ducking, no movieVolume - returns 1.0", () => {
   const context = createContextWithAudioParams();

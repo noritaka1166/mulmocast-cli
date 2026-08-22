@@ -1,4 +1,5 @@
 import test from "node:test";
+import { audioParamsSchema } from "../../src/types/schema.js";
 import assert from "node:assert";
 
 import { createMockContext, createMockBeat } from "../actions/utils.js";
@@ -21,10 +22,10 @@ test("getPadding with custom beat padding", () => {
     },
   });
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 1.0,
-  };
+  });
   mock.studio.script.beats.push(beat);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -35,10 +36,10 @@ test("getPadding with custom beat padding", () => {
 test("getPadding for last beat", () => {
   const beat = createMockBeat({});
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 1.0,
-  };
+  });
   mock.studio.script.beats.push(beat);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -50,10 +51,10 @@ test("getPadding for second-to-last beat (closing gap)", () => {
   const beat1 = createMockBeat({});
   const beat2 = createMockBeat({});
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 1.5,
-  };
+  });
   mock.studio.script.beats.push(beat1, beat2);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -66,10 +67,10 @@ test("getPadding for regular beat", () => {
   const beat2 = createMockBeat({});
   const beat3 = createMockBeat({});
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 1.0,
-  };
+  });
   mock.studio.script.beats.push(beat1, beat2, beat3);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -318,10 +319,10 @@ test("spilledOverAudio with insufficient audio", () => {
 test("noSpilledOverAudio with audio only", () => {
   const beat = createMockBeat({});
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 0.0,
-  };
+  });
   mock.studio.script.beats.push(beat);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -338,10 +339,10 @@ test("noSpilledOverAudio with movie and audio", () => {
   const beat1 = createMockBeat({});
   const beat2 = createMockBeat({});
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 1.0,
-  };
+  });
   mock.studio.script.beats.push(beat1, beat2);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -362,10 +363,10 @@ test("noSpilledOverAudio with movie and audio", () => {
 test("noSpilledOverAudio with specified beat duration", () => {
   const beat = createMockBeat({ duration: 45 });
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 0.0,
-  };
+  });
   mock.studio.script.beats.push(beat);
   mock.studio = createStudioData(mock.studio.script, "test");
 
@@ -387,10 +388,10 @@ test("noSpilledOverAudio with custom beat padding", () => {
     },
   });
   const mock = createMockContext();
-  mock.presentationStyle.audioParams = {
+  mock.presentationStyle.audioParams = audioParamsSchema.parse({
     padding: 2.0,
     closingPadding: 0.0,
-  };
+  });
   mock.studio.script.beats.push(beat);
   mock.studio = createStudioData(mock.studio.script, "test");
 

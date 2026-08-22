@@ -1,11 +1,13 @@
 import test from "node:test";
+import type { MulmoBeat } from "../../src/types/index.js";
+import { presentationStyleFixture } from "../fixtures.js";
 import assert from "node:assert";
 
 import { MulmoPresentationStyleMethods } from "../../src/methods/mulmo_presentation_style.js";
 import { createMockContext, createMockBeat } from "../actions/utils.js";
 
 test("defaultSpeaker isDefault", async () => {
-  const presentationStyle = {
+  const presentationStyle = presentationStyleFixture({
     speechParams: {
       provider: "openai",
       speakers: {
@@ -18,13 +20,13 @@ test("defaultSpeaker isDefault", async () => {
         },
       },
     },
-  };
+  });
   const result = MulmoPresentationStyleMethods.getDefaultSpeaker(presentationStyle);
   assert.equal(result, "Presenter");
 });
 
 test("defaultSpeaker no isDefault", async () => {
-  const presentationStyle = {
+  const presentationStyle = presentationStyleFixture({
     speechParams: {
       provider: "openai",
       speakers: {
@@ -36,13 +38,13 @@ test("defaultSpeaker no isDefault", async () => {
         },
       },
     },
-  };
+  });
   const result = MulmoPresentationStyleMethods.getDefaultSpeaker(presentationStyle);
   assert.equal(result, "Presenter");
 });
 
 test("defaultSpeaker no isDefault two speaker", async () => {
-  const presentationStyle = {
+  const presentationStyle = presentationStyleFixture({
     speechParams: {
       provider: "openai",
       speakers: {
@@ -60,13 +62,13 @@ test("defaultSpeaker no isDefault two speaker", async () => {
         },
       },
     },
-  };
+  });
   const result = MulmoPresentationStyleMethods.getDefaultSpeaker(presentationStyle);
   assert.equal(result, "Presenter1");
 });
 
 test("defaultSpeaker isDefault two speaker", async () => {
-  const presentationStyle = {
+  const presentationStyle = presentationStyleFixture({
     speechParams: {
       provider: "openai",
       speakers: {
@@ -86,18 +88,18 @@ test("defaultSpeaker isDefault two speaker", async () => {
         },
       },
     },
-  };
+  });
   const result = MulmoPresentationStyleMethods.getDefaultSpeaker(presentationStyle);
   assert.equal(result, "Presenter1");
 });
 
 test("defaultSpeaker error no speaker", async () => {
-  const presentationStyle = {
+  const presentationStyle = presentationStyleFixture({
     speechParams: {
       provider: "openai",
       speakers: {},
     },
-  };
+  });
   await assert.rejects(async () => {
     MulmoPresentationStyleMethods.getDefaultSpeaker(presentationStyle);
   });
@@ -108,6 +110,11 @@ test("defaultSpeaker error no speaker", async () => {
 // The priority surfaced here is the single source of truth that both
 // the renderer (`slide.ts`) and the editor (`@mulmocast/deck-web`)
 // will read from, so the tests below pin the contract loudly.
+
+// The label doubles as every colour so an assertion can name which theme won. It must be a
+// colour the schema accepts (six hex digits), or the fixture is one no script could carry.
+const PRESENTATION_THEME = "9E5EDA"; // distinguishable sentinels that are also valid colours
+const BEAT_THEME = "8EA7CD";
 
 const fakeTheme = (label: string) => ({
   colors: {
@@ -129,22 +136,22 @@ const fakeTheme = (label: string) => ({
 });
 
 test("getResolvedSlideTheme: per-beat theme wins over presentation-level", () => {
-  const presentationStyle = { slideParams: { theme: fakeTheme("PRES") } };
-  const beat = { image: { type: "slide" as const, slide: { layout: "title" as const, title: "x" }, theme: fakeTheme("BEAT") } };
+  const presentationStyle = presentationStyleFixture({ slideParams: { theme: fakeTheme(PRESENTATION_THEME) } });
+  const beat: MulmoBeat = { text: "", image: { type: "slide", slide: { layout: "title", title: "x" }, theme: fakeTheme(BEAT_THEME) } };
   const result = MulmoPresentationStyleMethods.getResolvedSlideTheme(presentationStyle, beat);
-  assert.equal(result.colors.bg, "BEAT");
+  assert.equal(result.colors.bg, BEAT_THEME);
 });
 
 test("getResolvedSlideTheme: presentation-level theme used when beat lacks one", () => {
-  const presentationStyle = { slideParams: { theme: fakeTheme("PRES") } };
-  const beat = { image: { type: "slide" as const, slide: { layout: "title" as const, title: "x" } } };
+  const presentationStyle = presentationStyleFixture({ slideParams: { theme: fakeTheme(PRESENTATION_THEME) } });
+  const beat: MulmoBeat = { text: "", image: { type: "slide", slide: { layout: "title", title: "x" } } };
   const result = MulmoPresentationStyleMethods.getResolvedSlideTheme(presentationStyle, beat);
-  assert.equal(result.colors.bg, "PRES");
+  assert.equal(result.colors.bg, PRESENTATION_THEME);
 });
 
 test("getResolvedSlideTheme: slideThemes.corporate fallback when neither is set", () => {
-  const presentationStyle = {};
-  const beat = { image: { type: "slide" as const, slide: { layout: "title" as const, title: "x" } } };
+  const presentationStyle = presentationStyleFixture({});
+  const beat: MulmoBeat = { text: "", image: { type: "slide", slide: { layout: "title", title: "x" } } };
   const result = MulmoPresentationStyleMethods.getResolvedSlideTheme(presentationStyle, beat);
   // corporate's bg is "F8FAFC"; we just assert the call returns a
   // theme-shaped object — checking the literal value would lock the
@@ -156,12 +163,12 @@ test("getResolvedSlideTheme: slideThemes.corporate fallback when neither is set"
 test("getResolvedSlideTheme: non-slide beat falls through to fallback (no throw)", () => {
   // Callers driving a deck preview from a mixed script need to be
   // able to hand any beat in without first checking its image.type.
-  const presentationStyle = { slideParams: { theme: fakeTheme("PRES") } };
-  const beat = { image: { type: "textSlide" as const, slide: { title: "x" } } };
+  const presentationStyle = presentationStyleFixture({ slideParams: { theme: fakeTheme(PRESENTATION_THEME) } });
+  const beat: MulmoBeat = { text: "", image: { type: "textSlide", slide: { title: "x" } } };
   const result = MulmoPresentationStyleMethods.getResolvedSlideTheme(presentationStyle, beat);
   // Falls through to the presentation-level theme since beat.image.theme
   // doesn't apply (different image kind), instead of throwing.
-  assert.equal(result.colors.bg, "PRES");
+  assert.equal(result.colors.bg, PRESENTATION_THEME);
 });
 
 // generatedMovieHasAudio: resolves provider/model (including defaults) and the
