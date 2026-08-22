@@ -18,6 +18,7 @@ test("image plugin path with URL source", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "image",
         source: {
@@ -39,6 +40,7 @@ test("image plugin path with path source", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "image",
         source: {
@@ -65,6 +67,7 @@ test("image plugin path with relative path source", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "image",
         source: {
@@ -91,6 +94,7 @@ test("image plugin path with wrong image type", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "textSlide",
         slide: { title: "Not an image" },
@@ -116,6 +120,7 @@ test("movie plugin path with URL source", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/movie.png",
     beat: {
+      text: "",
       image: {
         type: "movie",
         source: {
@@ -138,6 +143,7 @@ test("movie plugin path with path source", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/movie.png",
     beat: {
+      text: "",
       image: {
         type: "movie",
         source: {
@@ -164,6 +170,7 @@ test("movie plugin path extension fix", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/video.png",
     beat: {
+      text: "",
       image: {
         type: "movie",
         source: {
@@ -186,6 +193,7 @@ test("movie plugin path with .mov already in imagePath", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/video.mov",
     beat: {
+      text: "",
       image: {
         type: "movie",
         source: {
@@ -207,7 +215,7 @@ test("source plugins with no image property", () => {
 
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/file.png",
-    beat: {},
+    beat: { text: "" },
   };
 
   const imagePath = imagePlugin?.path(mockParams);
@@ -223,6 +231,7 @@ test("source plugins with unknown source kind", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "image",
         source: {
@@ -250,6 +259,7 @@ test("image plugin with absolute path source", () => {
   const mockParams: ImageProcessorParams = {
     imagePath: "/test/path/image.png",
     beat: {
+      text: "",
       image: {
         type: "image",
         source: {
