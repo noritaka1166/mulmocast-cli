@@ -20,7 +20,7 @@ yarn ci_test                 # Run Node.js native test runner
 ### Core CLI Commands
 ```bash
 yarn cli                     # Run the CLI directly with npx tsx
-yarn test                    # Run end-to-end test (generates test files)
+yarn test                    # Run end-to-end test (generates test files; needs TTS/image API keys)
 
 # Content generation shortcuts
 yarn audio <script>          # Generate audio from MulmoScript
