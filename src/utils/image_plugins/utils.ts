@@ -1,9 +1,9 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatPathParams } from "../../types/index.js";
 import { getMarkdownStyle } from "../../data/markdownStyles.js";
 import { randomUUID } from "node:crypto";
 import nodeProcess from "node:process";
 
-export const parrotingImagePath = (params: ImageProcessorParams) => {
+export const parrotingImagePath = (params: BeatPathParams) => {
   return params.imagePath;
 };
 

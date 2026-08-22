@@ -1,4 +1,4 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
 import { getHTMLFile } from "../file.js";
 import { renderHTMLToImage, interpolate } from "../html_render.js";
 import { parrotingImagePath, generateUniqueId } from "./utils.js";
@@ -26,7 +26,7 @@ const processChart = async (params: ImageProcessorParams) => {
   return imagePath;
 };
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
 

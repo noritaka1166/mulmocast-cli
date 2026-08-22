@@ -1,11 +1,11 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatRenderParams } from "../../types/index.js";
 import { processSource, pathSource } from "./source.js";
 import { MulmoMediaSourceMethods } from "../../methods/mulmo_media_source.js";
 import { movieHtml } from "./media_html.js";
 
 export const imageType = "movie";
 
-const dumpHtml = async (params: ImageProcessorParams) => {
+const dumpHtml = async (params: BeatRenderParams) => {
   const { beat, context } = params;
   if (!beat.image || beat.image.type !== imageType) return;
 

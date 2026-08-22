@@ -1,4 +1,4 @@
-import { ImageProcessorParams } from "../../types/index.js";
+import { BeatPathParams, ImageProcessorParams } from "../../types/index.js";
 
 export const imageType = "voice_over";
 
@@ -8,6 +8,6 @@ export const processBeatReference = async (__: ImageProcessorParams) => {
 };
 
 export const process = processBeatReference;
-export const path = (__: ImageProcessorParams) => {
+export const path = (__: BeatPathParams) => {
   return undefined;
 };

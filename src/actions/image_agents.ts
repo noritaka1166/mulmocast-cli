@@ -295,8 +295,8 @@ export const imagePreprocessAgent = async (namedInputs: {
     const plugin = MulmoBeatMethods.getPlugin(beat);
     const pluginPath = plugin.path({ beat, context, imagePath, ...htmlStyle(context, beat) });
 
-    const markdown = plugin.markdown ? plugin.markdown({ beat, context, imagePath, ...htmlStyle(context, beat) }) : undefined;
-    const html = plugin.html ? await plugin.html({ beat, context, imagePath, ...htmlStyle(context, beat) }) : undefined;
+    const markdown = plugin.markdown ? plugin.markdown({ beat, context }) : undefined;
+    const html = plugin.html ? await plugin.html({ beat, context }) : undefined;
 
     const isTypeMovie = beat.image.type === ImageMediaType.Movie;
     const isAnimatedHtml = MulmoBeatMethods.isAnimatedHtmlTailwind(beat);
