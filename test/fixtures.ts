@@ -1,4 +1,5 @@
-import type { ImageProcessorParams, MulmoBeat, MulmoStudioContext } from "../src/types/index.js";
+import type { ImageProcessorParams, MulmoBeat, MulmoPresentationStyle, MulmoStudioContext } from "../src/types/index.js";
+import { mulmoPresentationStyleSchema } from "../src/types/schema.js";
 import type { SlideTheme } from "@mulmocast/deck";
 import { createMockContext } from "./actions/utils.js";
 
@@ -46,3 +47,14 @@ export const contextWithSlideTheme = (theme?: SlideTheme): MulmoStudioContext =>
   const context = createMockContext();
   return theme ? { ...context, presentationStyle: { ...context.presentationStyle, slideParams: { theme } } } : context;
 };
+
+/**
+ * A `MulmoPresentationStyle` from a partial one.
+ *
+ * `$mulmocast` is the only field the schema cannot default; everything else it fills exactly
+ * as it would for a real script. The fixtures this replaces were partial literals that only
+ * compiled where the parameter was cast, and they left the defaulted fields undefined —
+ * which is not a state production can produce.
+ */
+export const presentationStyleFixture = (partial: Record<string, unknown> = {}): MulmoPresentationStyle =>
+  mulmoPresentationStyleSchema.parse({ $mulmocast: { version: "1.1" }, ...partial });

@@ -1,6 +1,6 @@
 //  npx tsx ./test/agents/run_crawler.ts
 import { GraphAILogger } from "graphai";
-import puppeteerCrawlerAgentInfo from "../../src/agents/puppeteer_crawler_agent";
+import puppeteerCrawlerAgentInfo from "../../src/agents/puppeteer_crawler_agent.js";
 
 import test from "node:test";
 
