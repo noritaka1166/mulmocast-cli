@@ -1,7 +1,7 @@
 import nodePath from "node:path";
 import { pathToFileURL } from "node:url";
 import { BeatRenderParams, ImageProcessorParams } from "../../types/index.js";
-import { generateSlideHTML } from "@mulmocast/deck";
+import { generateSlideFragment, generateSlideHTML } from "@mulmocast/deck";
 import type { SlideLayout, SlideTheme, ContentBlock, MulmoSlideMedia, SlideBranding, ResolvedBranding } from "@mulmocast/deck";
 import { renderHTMLToImage } from "../html_render.js";
 import { parrotingImagePath } from "./utils.js";
@@ -181,6 +181,24 @@ const processSlide = async (params: ImageProcessorParams) => {
   return imagePath;
 };
 
+/**
+ * A slide beat as markup for the export document, not as a document of its own.
+ *
+ * `generateSlideHTML` above is right for the PNG path, where the slide IS the page. Here the
+ * result is concatenated into one `<body>` alongside every other beat, so a full document per
+ * slide meant N Tailwind CDN loads, N `tailwind.config` assignments racing each other, and an
+ * `html, body { overflow: hidden }` escaping into the export page — which made a document of
+ * stacked slides unscrollable. `beat_html/slide.ts` already draws the browser path from
+ * `generateSlideFragment`; this is the same change for the dump path.
+ *
+ * The fragment's own css is emitted next to it because it is confined to `scopeClass`, which
+ * deck makes unique per call. What is SHARED — Tailwind, the chart and mermaid runtimes,
+ * `slideUtilityCss` — belongs to the page and is `actions/html.ts`'s job, once.
+ *
+ * The box is here rather than left to the host: the fragment is `w-full h-full`, so without
+ * one it collapses to nothing, and `actions/html.ts` concatenates beats without knowing which
+ * of them is a slide.
+ */
 const dumpHtml = async (params: BeatRenderParams) => {
   const { beat } = params;
   if (!beat.image || beat.image.type !== imageType) return;
@@ -189,7 +207,8 @@ const dumpHtml = async (params: BeatRenderParams) => {
   const slide = resolveSlide(params);
   const reference = (beat.image as MulmoSlideMedia).reference;
   const resolvedBranding = await resolveAndConvertBranding(params);
-  return generateSlideHTML(theme, slide, reference, resolvedBranding);
+  const fragment = generateSlideFragment(theme, slide, { reference, branding: resolvedBranding });
+  return `<style>${fragment.css}</style>\n<div style="aspect-ratio: 16 / 9;">${fragment.html}</div>`;
 };
 
 export const process = processSlide;
