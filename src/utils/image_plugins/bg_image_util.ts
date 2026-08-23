@@ -2,7 +2,7 @@ import { BackgroundImage, MulmoStudioContext, ImageProcessorParams } from "../..
 import { MulmoMediaSourceMethods } from "../../methods/mulmo_media_source.js";
 import { resolveStyle } from "./utils.js";
 import { safeFetch, DEFAULT_FETCH_TIMEOUT_MS } from "../fetch.js";
-import { neutralizeStyleTerminator } from "../html_escape.js";
+import { escapeCssString, neutralizeStyleTerminator } from "../html_escape.js";
 
 /**
  * Resolve background image from beat level and global level settings.
@@ -75,6 +75,8 @@ export const backgroundImageToCSS = async (backgroundImage: BackgroundImage | un
   }
 
   const isSimpleUrl = typeof backgroundImage === "string";
+  // Escaped at each use rather than here: the base64 body cannot carry a quote, but the
+  // content-type in front of it is whatever the remote server's response header said.
   const imageUrl = isSimpleUrl ? await fetchUrlAsDataUrl(backgroundImage) : await MulmoMediaSourceMethods.toDataUrl(backgroundImage.source, context);
   const size = sizeToCSS(isSimpleUrl ? "cover" : (backgroundImage.size ?? "cover"));
   const opacity = isSimpleUrl ? 1 : (backgroundImage.opacity ?? 1);
@@ -93,7 +95,7 @@ export const backgroundImageToCSS = async (backgroundImage: BackgroundImage | un
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: url('${imageUrl}');
+        background-image: url('${escapeCssString(imageUrl)}');
         background-size: ${size};
         background-position: center;
         background-repeat: no-repeat;
@@ -109,7 +111,7 @@ export const backgroundImageToCSS = async (backgroundImage: BackgroundImage | un
       margin: 0;
     }
     body {
-      background-image: url('${imageUrl}');
+      background-image: url('${escapeCssString(imageUrl)}');
       background-size: ${size};
       background-position: center;
       background-repeat: no-repeat;

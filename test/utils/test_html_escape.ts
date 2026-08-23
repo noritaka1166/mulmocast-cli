@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert";
-import { escapeJsonForScript, neutralizeStyleTerminator } from "../../src/utils/html_escape.js";
+import { escapeCssString, escapeJsonForScript, neutralizeStyleTerminator } from "../../src/utils/html_escape.js";
+import { cssUnescape } from "../css_unescape.js";
 
 const LINE_SEPARATOR = " ";
 const PARAGRAPH_SEPARATOR = " ";
@@ -111,5 +112,66 @@ test("neutralizeStyleTerminator leaves ordinary CSS byte-identical", () => {
     ".x::before { content: 'style'; }",
   ].forEach((css) => {
     assert.strictEqual(neutralizeStyleTerminator(css), css, `${JSON.stringify(css)} must pass through`);
+  });
+});
+
+// ─── escapeCssString ───
+//
+// bg_image_util places a data URL inside `url('...')`. The base64 body cannot carry a quote,
+// but the content-type in front of it comes from the remote server's response header — so a
+// hostile host is what reaches this, not a hostile author.
+
+const ATTACK_URL = "data:image/png;') ;} body{display:none} .x{background:url('x";
+
+test("escapeCssString keeps a value from ending the CSS string it is placed in", () => {
+  const escaped = escapeCssString(ATTACK_URL);
+  assert.ok(/[';}]/.test(ATTACK_URL), "the fixture is hostile to begin with");
+  assert.ok(!/(^|[^\\])'/.test(escaped), "no quote survives without a backslash in front of it");
+  assert.ok(escaped.includes("body{display:none}"), "the rest of the value is carried through, not stripped");
+});
+
+test("escapeCssString escapes both quote characters, so either may open the string", () => {
+  assert.strictEqual(escapeCssString(`a'b"c`), `a\\'b\\"c`);
+});
+
+test("escapeCssString escapes a backslash before anything else, so an escape cannot be forged", () => {
+  // Without this order, \' would arrive as a literal backslash followed by a live quote.
+  assert.strictEqual(escapeCssString("a\\'b"), "a\\\\\\'b");
+});
+
+test("escapeCssString turns a line break into the hex escape CSS needs, with its terminator", () => {
+  assert.strictEqual(escapeCssString("a\nb"), "a\\a b");
+  assert.strictEqual(escapeCssString("a\rb"), "a\\d b");
+  assert.strictEqual(escapeCssString("a\fb"), "a\\c b");
+});
+
+test("escapeCssString leaves an ordinary data URL byte for byte", () => {
+  const url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+  assert.strictEqual(escapeCssString(url), url);
+});
+
+test("escapeCssString leaves every other character alone", () => {
+  const ordinary = "https://example.com/a-b_c.png?x=1&y=2#z <>&";
+  assert.strictEqual(escapeCssString(ordinary), ordinary);
+});
+
+/**
+ * A quoted Content-Type parameter is valid and non-hostile — `image/svg+xml;charset="utf-8"`
+ * is what a server may legitimately send — and it does NOT survive byte for byte, because the
+ * quote is exactly what has to be escaped. What survives is the value a CSS parser reads back,
+ * which is the property that matters and the one this pins. Raised by Codex in round 2 against
+ * a byte-for-byte claim that was true only of unquoted types.
+ */
+
+test("a quoted content-type parameter changes bytes but not the URL CSS reads back", () => {
+  const url = 'data:image/svg+xml;charset="utf-8";base64,PHN2Zy8+';
+  const escaped = escapeCssString(url);
+  assert.notStrictEqual(escaped, url, "the quote must be escaped — that is the whole point");
+  assert.strictEqual(cssUnescape(escaped), url, "and the value survives the round trip");
+});
+
+test("the escapes this helper writes all round-trip", () => {
+  ["a'b", 'a"b', "a\\b", "a\nb", "a\rb", "a\fb", "'\"\\\n"].forEach((value) => {
+    assert.strictEqual(cssUnescape(escapeCssString(value)), value, JSON.stringify(value));
   });
 });
