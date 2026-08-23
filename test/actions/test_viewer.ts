@@ -6,6 +6,7 @@ import path from "path";
 
 import { viewer, viewerFilePath } from "../../src/actions/viewer.js";
 import { createStudioData } from "../../src/utils/context.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
 import type { MulmoStudioContext } from "../../src/types/index.js";
 
 // Minimal valid 1x1 transparent PNG (base64). Self-contained so the test does
@@ -19,7 +20,7 @@ const writeSamplePng = (dir: string, name: string): string => {
 };
 
 const buildContext = (tmpDir: string, beatImageFiles: (string | undefined)[]): MulmoStudioContext => {
-  const mulmoScript = {
+  const mulmoScript = MulmoScriptMethods.validate({
     $mulmocast: { version: "1.0", credit: "closing" },
     title: "Viewer Test Deck",
     description: "",
@@ -27,7 +28,7 @@ const buildContext = (tmpDir: string, beatImageFiles: (string | undefined)[]): M
       text: `Caption ${i + 1}`,
       image: { type: "textSlide" as const, slide: { title: `Slide ${i + 1}` } },
     })),
-  };
+  });
   const studio = createStudioData(mulmoScript, "viewer_test");
   // Inject pre-rendered image paths for each beat so the viewer can pick them up.
   beatImageFiles.forEach((file, i) => {
@@ -171,7 +172,7 @@ test("viewer prefers htmlImageFile over imageFile (matches pdf.ts / movie.ts)", 
 test("viewer escapes HTML in title and caption", async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "viewer-test-"));
   try {
-    const mulmoScript = {
+    const mulmoScript = MulmoScriptMethods.validate({
       $mulmocast: { version: "1.0", credit: "closing" },
       title: "<script>alert(1)</script>",
       description: "",
@@ -181,7 +182,7 @@ test("viewer escapes HTML in title and caption", async () => {
           image: { type: "textSlide" as const, slide: { title: "T" } },
         },
       ],
-    };
+    });
     const studio = createStudioData(mulmoScript, "viewer_test");
     studio.beats[0].imageFile = writeSamplePng(tmpDir, "sample.png");
     const context = {

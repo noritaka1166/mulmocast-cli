@@ -5,6 +5,7 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 import { createVideo } from "../../src/actions/movie.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
 import type { MulmoStudioContext, MulmoScript } from "../../src/types/index.js";
 
 // Helper function to create a minimal context from a script
@@ -59,7 +60,7 @@ test("test createVideo with fsd_demo.json in testMode", async () => {
 
 test("test createVideo filterComplex structure", async () => {
   // Create a minimal script with 2 beats
-  const script: MulmoScript = {
+  const script = MulmoScriptMethods.validate({
     $mulmocast: { version: "1.1" },
     lang: "en",
     title: "Test Video",
@@ -81,7 +82,7 @@ test("test createVideo filterComplex structure", async () => {
         },
       },
     ],
-  };
+  });
 
   const context = createContextFromScript(script);
 

@@ -3,7 +3,9 @@ import test from "node:test";
 import { GraphAILogger } from "graphai";
 
 import { getFileObject } from "../../src/cli/helpers.js";
-import { createStudioData } from "../../src/utils/context.js";
+import { createStudioData, initSessionState } from "../../src/utils/context.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
+import { multiLingualObjectToArray } from "../../src/utils/utils.js";
 import { images, generateBeatImage } from "../../src/actions/images.js";
 import { addSessionProgressCallback } from "../../src/methods/mulmo_studio_context.js";
 
@@ -12,7 +14,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const testMulmoScript = {
+const testMulmoScript = MulmoScriptMethods.validate({
   $mulmocast: {
     version: "1.0",
     credit: "closing",
@@ -102,7 +104,7 @@ const testMulmoScript = {
       },
     },
   ],
-};
+});
 
 const getContext = () => {
   const fileDirs = getFileObject({ file: "hello.yaml" });
@@ -111,24 +113,9 @@ const getContext = () => {
     studio,
     fileDirs,
     force: false,
-    sessionState: {
-      inSession: {
-        audio: false,
-        image: false,
-        video: false,
-        multiLingual: false,
-        caption: false,
-        pdf: false,
-      },
-      inBeatSession: {
-        audio: {},
-        image: {},
-        movie: {},
-        multiLingual: {},
-        caption: {},
-        html: {},
-      },
-    },
+    lang: studio.script.lang,
+    multiLingual: multiLingualObjectToArray(undefined, studio.script.beats),
+    sessionState: initSessionState(),
     presentationStyle: studio.script,
   };
   return context;

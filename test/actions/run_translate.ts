@@ -2,7 +2,9 @@ import test from "node:test";
 // import assert from "node:assert";
 
 import { getFileObject } from "../../src/cli/helpers.js";
-import { createStudioData, getMultiLingual } from "../../src/utils/context.js";
+import { createStudioData, getMultiLingual, initSessionState } from "../../src/utils/context.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
+import { multiLingualObjectToArray } from "../../src/utils/utils.js";
 import { translateBeat, translate } from "../../src/actions/translate.js";
 
 import path from "path";
@@ -10,7 +12,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const testMulmoScript = {
+const testMulmoScript = MulmoScriptMethods.validate({
   $mulmocast: {
     version: "1.0",
     credit: "closing",
@@ -100,7 +102,7 @@ const testMulmoScript = {
       },
     },
   ],
-};
+});
 
 const getContext = () => {
   const fileDirs = getFileObject({ file: "hello.yaml" });
@@ -108,28 +110,12 @@ const getContext = () => {
   const studio = createStudioData(testMulmoScript, "hello");
   const multiLingual = getMultiLingual("", studio.beats);
   const context = {
-    multiLingual,
+    multiLingual: multiLingualObjectToArray(multiLingual, studio.beats),
     studio,
     fileDirs,
     force: false,
-    sessionState: {
-      inSession: {
-        audio: false,
-        image: false,
-        video: false,
-        multiLingual: false,
-        caption: false,
-        pdf: false,
-      },
-      inBeatSession: {
-        audio: {},
-        image: {},
-        movie: {},
-        multiLingual: {},
-        caption: {},
-        html: {},
-      },
-    },
+    lang: studio.script.lang,
+    sessionState: initSessionState(),
     presentationStyle: studio.script,
   };
   return context;
@@ -147,7 +133,7 @@ test("test beat translate", async () => {
 
 test("test beat translate - fresh translation", async () => {
   const context = getContext();
-  context.multiLingual["__index__1"].multiLingualTexts = {
+  context.multiLingual[1].multiLingualTexts = {
     fr: {
       lang: "fr",
       text: "## Original Language\nen\n## Language\nfr\n## Target\nCeci est un tableau au format markdown.",

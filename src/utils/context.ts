@@ -55,7 +55,7 @@ const mulmoCredit = (speaker: string, isPortrait: boolean) => {
   };
 };
 
-const initSessionState = () => {
+export const initSessionState = () => {
   return {
     inSession: {
       audio: false,

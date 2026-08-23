@@ -55,7 +55,7 @@ test("isExplicitMixMode: returns false when ducking is set but suppressSpeech is
 
 test("isExplicitMixMode: returns true when only beat-level movieVolume is set", () => {
   const context = createContextWithAudioParams();
-  context.studio.script.beats = [{ speaker: "Presenter", audioParams: { movieVolume: 0.5 } }];
+  context.studio.script.beats = [{ text: "", speaker: "Presenter", audioParams: { movieVolume: 0.5 } }];
   assert.strictEqual(isExplicitMixMode(context), true);
 });
 
@@ -108,7 +108,7 @@ test("mixAudiosFromMovieBeats: explicit mode - uses normalize=0 and alimiter", (
 
 test("mixAudiosFromMovieBeats: explicit mode - beat-level movieVolume triggers normalize=0", () => {
   const context = createContextWithAudioParams();
-  context.studio.script.beats = [{ speaker: "Presenter", audioParams: { movieVolume: 0.5 } }];
+  context.studio.script.beats = [{ text: "", speaker: "Presenter", audioParams: { movieVolume: 0.5 } }];
   const ffmpegContext = FfmpegContextInit();
   mixAudiosFromMovieBeats(ffmpegContext, "0:a", ["a1", "a2"], context);
 
