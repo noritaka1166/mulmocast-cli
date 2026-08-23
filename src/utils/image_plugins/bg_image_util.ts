@@ -49,12 +49,15 @@ const sizeToCSS = (size: string): string => {
   return size === "fill" ? "100% 100%" : size;
 };
 
+/** The background image comes from the script, the style from the beat; the paths and sizes `process()` needs are not read here. */
+type CombinedStyleParams = Pick<ImageProcessorParams, "context" | "textSlideStyle">;
+
 /**
  * Resolve combined style from background image and custom style.
  * Common pattern used by markdown, textSlide, mermaid plugins.
  */
 export const resolveCombinedStyle = async (
-  params: ImageProcessorParams,
+  params: CombinedStyleParams,
   beatBackgroundImage: BackgroundImage | undefined,
   beatStyle: string | undefined,
 ): Promise<string> => {
