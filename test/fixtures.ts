@@ -1,3 +1,4 @@
+import type { GraphAI } from "graphai";
 import type { ImageProcessorParams, MulmoBeat, MulmoPresentationStyle, MulmoStudioContext } from "../src/types/index.js";
 import { mulmoPresentationStyleSchema } from "../src/types/schema.js";
 import type { SlideTheme } from "@mulmocast/deck";
@@ -58,3 +59,20 @@ export const contextWithSlideTheme = (theme?: SlideTheme): MulmoStudioContext =>
  */
 export const presentationStyleFixture = (partial: Record<string, unknown> = {}): MulmoPresentationStyle =>
   mulmoPresentationStyleSchema.parse({ $mulmocast: { version: "1.1" }, ...partial });
+
+/**
+ * The GraphAI plumbing an `AgentFunctionContext` carries and no mulmo agent reads.
+ *
+ * The graph fills it in at runtime, so a test that calls an agent function directly has to
+ * supply it. Each caller adds its own `config` / `params`, which are the parts a test varies.
+ */
+export const agentCallContext = {
+  filterParams: {},
+  debugInfo: {
+    verbose: false,
+    nodeId: "",
+    state: "",
+    retry: 0,
+    subGraphs: new Map<string, GraphAI>(),
+  },
+};

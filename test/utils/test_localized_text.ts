@@ -9,16 +9,16 @@ test("test localizedText 1", async () => {
 });
 
 test("test localizedText 2", async () => {
-  const result = localizedText({ text: "hello" }, { multiLingualTexts: { ja: { text: "ハロー" } } });
+  const result = localizedText({ text: "hello" }, { multiLingualTexts: { ja: { text: "ハロー", lang: "ja", cacheKey: "" } } });
   assert.equal(result, "hello");
 });
 
 test("test localizedText 3", async () => {
-  const result = localizedText({ text: "hello" }, { multiLingualTexts: { ja: { text: "ハロー" } } }, "ja");
+  const result = localizedText({ text: "hello" }, { multiLingualTexts: { ja: { text: "ハロー", lang: "ja", cacheKey: "" } } }, "ja");
   assert.equal(result, "ハロー");
 });
 
 test("test localizedText 4", async () => {
-  const result = localizedText({ text: "hello" }, { multiLingualTexts: { ja: { text: "ハロー" } } }, "ja", "ja");
+  const result = localizedText({ text: "hello" }, { multiLingualTexts: { ja: { text: "ハロー", lang: "ja", cacheKey: "" } } }, "ja", "ja");
   assert.equal(result, "hello");
 });

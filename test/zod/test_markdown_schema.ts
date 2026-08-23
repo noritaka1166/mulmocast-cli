@@ -668,7 +668,9 @@ test("mulmoMarkdownMediaSchema: valid with full layout options", () => {
     style: "presentation",
   });
   assert(data.success);
-  assert.strictEqual(data.data?.markdown.header, "Presentation Title");
+  const { markdown } = data.data;
+  assert.ok(typeof markdown === "object" && !Array.isArray(markdown), "the layout-object form, not a bare string");
+  assert.strictEqual(markdown.header, "Presentation Title");
 });
 
 test("mulmoMarkdownMediaSchema: valid 2x2 with header and sidebar-left", () => {

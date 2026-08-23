@@ -88,7 +88,7 @@ test("test isMovieBeat recognizes every movie source", async () => {
   const context = movieBeatContext();
   assert.equal(MulmoStudioContextMethods.isMovieBeat(context, { lipSyncFile: "a.mp4" }, shot("A")), true);
   assert.equal(MulmoStudioContextMethods.isMovieBeat(context, { movieFile: "a.mp4" }, shot("A")), true);
-  assert.equal(MulmoStudioContextMethods.isMovieBeat(context, {}, { image: { type: "movie", source: { kind: "path", path: "a.mp4" } } }), true);
+  assert.equal(MulmoStudioContextMethods.isMovieBeat(context, {}, { text: "", image: { type: "movie", source: { kind: "path", path: "a.mp4" } } }), true);
 });
 
 test("test isMovieBeat treats a still beat as a still", async () => {
