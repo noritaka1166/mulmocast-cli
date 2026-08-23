@@ -2,7 +2,8 @@ import test from "node:test";
 // import assert from "node:assert";
 
 import { getFileObject } from "../../src/cli/helpers.js";
-import { createStudioData } from "../../src/utils/context.js";
+import { createStudioData, initSessionState } from "../../src/utils/context.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
 import { audio, images, movie } from "../../src/actions/index.js";
 
 import path from "path";
@@ -18,7 +19,7 @@ const audioData = {
   },
 };
 
-const mulmoScript = {
+const mulmoScript = MulmoScriptMethods.validate({
   $mulmocast: {
     version: "1.0",
     credit: "closing",
@@ -112,7 +113,7 @@ const mulmoScript = {
       },
     },
   ],
-};
+});
 
 test("test images and movie", async () => {
   // const fileDirs = getFileObject({ file: "hello.yaml", basedir: __dirname });
@@ -124,24 +125,7 @@ test("test images and movie", async () => {
     fileDirs,
     force: false,
     lang: "en",
-    sessionState: {
-      inSession: {
-        audio: false,
-        image: false,
-        video: false,
-        multiLingual: false,
-        caption: false,
-        pdf: false,
-      },
-      inBeatSession: {
-        audio: {},
-        image: {},
-        movie: {},
-        multiLingual: {},
-        caption: {},
-        html: {},
-      },
-    },
+    sessionState: initSessionState(),
     presentationStyle: studio.script,
     multiLingual: [...Array(studio.script.beats.length)].map(() => ({ multiLingualTexts: {} })),
   };

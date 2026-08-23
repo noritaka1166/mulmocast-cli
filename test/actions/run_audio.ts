@@ -2,7 +2,8 @@ import test from "node:test";
 // import assert from "node:assert";
 
 import { getFileObject } from "../../src/cli/helpers.js";
-import { createStudioData } from "../../src/utils/context.js";
+import { createStudioData, initSessionState } from "../../src/utils/context.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
 import { generateBeatAudio } from "../../src/actions/audio.js";
 
 import path from "path";
@@ -10,7 +11,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const testMulmoScript = {
+const testMulmoScript = MulmoScriptMethods.validate({
   $mulmocast: {
     version: "1.0",
     credit: "closing",
@@ -101,7 +102,7 @@ const testMulmoScript = {
       },
     },
   ],
-};
+});
 
 const getContext = () => {
   const fileDirs = getFileObject({ file: "hello.yaml" });
@@ -132,24 +133,7 @@ const getContext = () => {
         },
       },
     ],
-    sessionState: {
-      inSession: {
-        audio: false,
-        image: false,
-        video: false,
-        multiLingual: false,
-        caption: false,
-        pdf: false,
-      },
-      inBeatSession: {
-        audio: {},
-        image: {},
-        movie: {},
-        multiLingual: {},
-        caption: {},
-        html: {},
-      },
-    },
+    sessionState: initSessionState(),
     presentationStyle: studio.script,
   };
   return context;
@@ -158,11 +142,6 @@ const getContext = () => {
 test("test beat images", async () => {
   // const fileDirs = getFileObject({ file: "hello.yaml", basedir: __dirname });
   const context = getContext();
-  await generateBeatAudio(0, context, {
-    settings: {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-    },
-    langs: ["fr", "de"],
-  });
+  await generateBeatAudio(0, context, { langs: ["fr", "de"] });
   // console.log(listLocalizedAudioPaths(context, "de"));
 });
