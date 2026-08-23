@@ -1,5 +1,6 @@
 import { type MulmoStudioContext, type MulmoBeat } from "../../src/types/index.js";
 import { mulmoScriptSchema, mulmoPresentationStyleSchema } from "../../src/types/schema.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 /**
  * A context shaped like the one the app builds.
@@ -32,7 +33,7 @@ export const createMockContext = (): MulmoStudioContext => ({
     // schema defaults is kept, which is what a real script carries.
     script: {
       ...mulmoScriptSchema.parse({
-        $mulmocast: { version: "1.1" },
+        $mulmocast: { version: currentMulmoScriptVersion },
         title: "Test Script",
         beats: [{ text: "" }],
         lang: "en",
@@ -46,7 +47,7 @@ export const createMockContext = (): MulmoStudioContext => ({
   lang: "en",
   multiLingual: [],
   presentationStyle: mulmoPresentationStyleSchema.parse({
-    $mulmocast: { version: "1.1" },
+    $mulmocast: { version: currentMulmoScriptVersion },
     imageParams: { provider: "openai", model: "gpt-image-1", style: "natural", moderation: "auto" },
   }),
   sessionState: {

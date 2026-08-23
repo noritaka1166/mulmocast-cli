@@ -8,6 +8,7 @@ import { viewer, viewerFilePath } from "../../src/actions/viewer.js";
 import { createStudioData } from "../../src/utils/context.js";
 import { MulmoScriptMethods } from "../../src/methods/index.js";
 import type { MulmoStudioContext } from "../../src/types/index.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 // Minimal valid 1x1 transparent PNG (base64). Self-contained so the test does
 // not depend on any image file being checked into the repo.
@@ -21,7 +22,7 @@ const writeSamplePng = (dir: string, name: string): string => {
 
 const buildContext = (tmpDir: string, beatImageFiles: (string | undefined)[]): MulmoStudioContext => {
   const mulmoScript = MulmoScriptMethods.validate({
-    $mulmocast: { version: "1.0", credit: "closing" },
+    $mulmocast: { version: currentMulmoScriptVersion, credit: "closing" },
     title: "Viewer Test Deck",
     description: "",
     beats: beatImageFiles.map((_, i) => ({
@@ -173,7 +174,7 @@ test("viewer escapes HTML in title and caption", async () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "viewer-test-"));
   try {
     const mulmoScript = MulmoScriptMethods.validate({
-      $mulmocast: { version: "1.0", credit: "closing" },
+      $mulmocast: { version: currentMulmoScriptVersion, credit: "closing" },
       title: "<script>alert(1)</script>",
       description: "",
       beats: [

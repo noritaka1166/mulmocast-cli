@@ -1,13 +1,14 @@
 import test from "node:test";
 import assert from "node:assert";
 import { mulmoScriptSchema, mediaSourceSchema } from "../../src/types/schema.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 test("test zod", async () => {
   const initMulmoScript = {
     title: "title",
     description: "INITIAL_DESCRIPTION",
     $mulmocast: {
-      version: "1.1",
+      version: currentMulmoScriptVersion,
       credit: "closing",
     },
     lang: "en",
@@ -24,7 +25,7 @@ test("test zod", async () => {
   const expected = {
     success: true,
     data: {
-      $mulmocast: { version: "1.1", credit: "closing" },
+      $mulmocast: { version: currentMulmoScriptVersion, credit: "closing" },
       canvasSize: { width: 1280, height: 720 },
       speechParams: { speakers: { Presenter: { displayName: { en: "Presenter" }, voiceId: "shimmer", provider: "openai" } } },
       imageParams: { provider: "openai", images: {} },

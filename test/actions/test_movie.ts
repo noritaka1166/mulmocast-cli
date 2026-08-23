@@ -8,6 +8,7 @@ import { audio, images, movie } from "../../src/actions/index.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,7 +22,7 @@ const audioData = {
 
 const mulmoScript = MulmoScriptMethods.validate({
   $mulmocast: {
-    version: "1.0",
+    version: currentMulmoScriptVersion,
     credit: "closing",
   },
   title: "MASAI: A Modular Future for Software Engineering AI",

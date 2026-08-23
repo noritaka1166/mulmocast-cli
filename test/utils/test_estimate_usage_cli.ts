@@ -4,9 +4,10 @@ import { estimateUsage, actionEstimateProcesses } from "../../src/utils/estimate
 import { formatUsageEstimates } from "../../src/utils/estimate_usage_format.js";
 import { mulmoScriptSchema } from "../../src/types/schema.js";
 import type { UsageEstimate } from "../../src/types/usage.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 const fullScript = mulmoScriptSchema.parse({
-  $mulmocast: { version: "1.1" },
+  $mulmocast: { version: currentMulmoScriptVersion },
   lang: "en",
   captionParams: { lang: "ja" },
   speechParams: { speakers: { Presenter: { voiceId: "shimmer", displayName: { en: "Presenter" } } } },
@@ -68,7 +69,7 @@ describe("formatUsageEstimates", () => {
 
   it("notes records without pricing data", () => {
     const script = mulmoScriptSchema.parse({
-      $mulmocast: { version: "1.1" },
+      $mulmocast: { version: currentMulmoScriptVersion },
       lang: "en",
       speechParams: { speakers: { Presenter: { voiceId: "Atla", provider: "kotodama", displayName: { en: "Presenter" } } } },
       beats: [{ speaker: "Presenter", text: "Hello" }],

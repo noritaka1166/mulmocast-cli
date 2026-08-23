@@ -9,6 +9,7 @@ import type { MulmoStudioContext } from "../../src/types/index.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -88,7 +89,7 @@ test("test createStudioData", async () => {
   const studio = createStudioData(
     MulmoScriptMethods.validate({
       $mulmocast: {
-        version: "1.1",
+        version: currentMulmoScriptVersion,
         credit: "closing",
       },
       lang: "en",
@@ -99,7 +100,7 @@ test("test createStudioData", async () => {
   // console.log(JSON.stringify(ret));
   const expect = {
     script: {
-      $mulmocast: { version: "1.1", credit: "closing" },
+      $mulmocast: { version: currentMulmoScriptVersion, credit: "closing" },
       lang: "en",
       canvasSize: { width: 1280, height: 720 },
       speechParams: { speakers: { Presenter: { displayName: { en: "Presenter" }, voiceId: "shimmer", provider: "openai" } } },
@@ -144,7 +145,7 @@ test("test createStudioData", async () => {
   const studio = createStudioData(
     MulmoScriptMethods.validate({
       $mulmocast: {
-        version: "1.1",
+        version: currentMulmoScriptVersion,
         credit: "closing",
       },
       lang: "en",
@@ -156,7 +157,7 @@ test("test createStudioData", async () => {
   // console.log(JSON.stringify(ret));
   const expect = {
     script: {
-      $mulmocast: { version: "1.1", credit: "closing" },
+      $mulmocast: { version: currentMulmoScriptVersion, credit: "closing" },
       lang: "en",
       canvasSize: { width: 1280, height: 720 },
       speechParams: { speakers: { Test: { displayName: { en: "Test" }, voiceId: "shimmer", provider: "openai" } } },

@@ -3,6 +3,7 @@ import type { ImageProcessorParams, MulmoBeat, MulmoPresentationStyle, MulmoStud
 import { mulmoPresentationStyleSchema } from "../src/types/schema.js";
 import type { SlideTheme } from "@mulmocast/deck";
 import { createMockContext } from "./actions/utils.js";
+import { currentMulmoScriptVersion } from "../src/types/const.js";
 
 /**
  * A complete `ImageProcessorParams` around a beat.
@@ -58,7 +59,7 @@ export const contextWithSlideTheme = (theme?: SlideTheme): MulmoStudioContext =>
  * which is not a state production can produce.
  */
 export const presentationStyleFixture = (partial: Record<string, unknown> = {}): MulmoPresentationStyle =>
-  mulmoPresentationStyleSchema.parse({ $mulmocast: { version: "1.1" }, ...partial });
+  mulmoPresentationStyleSchema.parse({ $mulmocast: { version: currentMulmoScriptVersion }, ...partial });
 
 /**
  * The GraphAI plumbing an `AgentFunctionContext` carries and no mulmo agent reads.
