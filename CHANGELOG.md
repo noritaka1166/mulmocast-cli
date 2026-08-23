@@ -2,6 +2,73 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.12.0](https://github.com/receptron/mulmocast-cli/releases/tag/2.12.0) (2026-08-23)
+
+### `mulmo html` の slide beat が、文書ではなく断片になりました
+
+slide beat の `html()` は `generateSlideHTML` の結果 — **完全な HTML 文書** — を返しており、
+`actions/html.ts` はそれを1つの `<body>` にそのまま連結していました。4 スライドの export で実測:
+
+| | 変更前 | 変更後 |
+|---|---:|---:|
+| `<!DOCTYPE html>` | 4 | 0 |
+| `cdn.tailwindcss.com` の読み込み | 4 | 0 |
+| `tailwind.config = ` の代入 | 4 | 0 |
+| `html, body { ... }` | 4 | 0 |
+
+Tailwind CDN が beat の数だけ重複ロードされ、`tailwind.config` の代入が競合して最後の1つが勝ち、
+`html, body { overflow: hidden }` がページ全体に漏れて **縦に並ぶ出力がスクロール不能** でした。
+
+ブラウザ経路（`beat_html/slide.ts`）は既に `generateSlideFragment` を使っており、dump 経路だけが
+取り残されていた形です。**PNG 経路は変わりません** — そこではスライドがページそのものだからです。
+
+共有物はページのものになりました: `slideUtilityCss` が `<head>` に1度だけ入ります。
+
+### 生成 HTML / CSS のエスケープ
+
+`mulmo html` と `mulmo markdown` が属性に入れる値と、背景画像の CSS `url()` をエスケープします。
+
+- **背景画像の `url('...')`** — 値は data URL ですが、**content-type は fetch 先のレスポンスヘッダ**
+  そのもので、`base64ToDataUrl` は `data:` で始まる値を素通しするため **著者が書いた base64 も**
+  data URL 全体を握れます。引用符1つで CSS 文字列から脱出できました
+- **`<title>`** と **`<img src/alt/width>`** — `source: { kind: "path" }` の beat では著者のパスが
+  そのまま属性に届きます
+
+通常の出力は変わりません: 引用符なしの content-type 90 通りがバイト単位で同一、引用符付き
+パラメータは**ソースは変わるが CSS が読む URL は同一**（往復性をテストで固定）。
+
+### 同梱スキーマが 14 か月ぶりに正しくなりました
+
+`assets/schemas/mulmo_script.json` は **8,326 バイト**、実物は **704,645 バイト**で、
+`html_tailwind` / `elements` / `vision` が丸ごと欠けていました。
+
+原因は読み手が消えていたことです。このファイルは MCP サーバー用に追加されましたが、
+`src/mcp/server.ts` は 2025-06-25 に `html_prompt.json` へ切り替えており、変数名だけが
+`MULMO_SCRIPT_JSON_SCHEMA` のまま残っていました。読み手が無い以上、正しさを保てるのは
+チェックだけで、それが無かったので静かにずれました。
+
+再生成し、**鮮度チェックをテストとして**入れました（新しい CI ジョブは不要 — 生成は
+`z.toJSONSchema` の 1 呼び出しです）。再生成は `yarn schema:write`。
+
+### swipe elements の root に手がかりが付きました
+
+```html
+<div data-mulmo-swipe-root style="position:relative; width:100%; height:100%; overflow:hidden;">
+```
+
+この root は親の高さの 100% を要求するので、**箱を与えない host では高さ 0 になり、
+runtime も throw も無いまま静かに空になります**。class も data 属性も無かったため、host は
+インライン style を部分一致で引っ掛けるしかありませんでした。`data-mulmo-chart` /
+`data-mulmo-path` と同じ慣習に揃えています。**追加のみで既存の出力は不変**です。
+
+### 開発側
+
+`types/` が root と同じ TypeScript（6.0.3）でビルドされるようになりました。同じソースを
+symlink で共有しながら別のコンパイラを使っていた状態の解消です。**生成される `.d.ts` は
+バイト単位で同一**なので `@mulmocast/types` の再公開は不要です。
+
+📦 **npm**: [`mulmocast@2.12.0`](https://www.npmjs.com/package/mulmocast/v/2.12.0)
+
 ## [2.11.0](https://github.com/receptron/mulmocast-cli/releases/tag/2.11.0) (2026-08-23)
 
 ### plugin の引数型が、実際に読むものだけを宣言するようになりました
