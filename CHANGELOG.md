@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.11.0](https://github.com/receptron/mulmocast-cli/releases/tag/2.11.0) (2026-08-23)
+
+### plugin の引数型が、実際に読むものだけを宣言するようになりました
+
+image plugin の 4 つの操作は `ImageProcessorParams` という 1 つの型を共有していました。
+`process()` は 8 フィールドすべてを使いますが、`markdown()` と `html()` が読むのは `beat`
+（と mermaid / movie / vision / slide の `context`、slide の `imageRefs`）だけ、`path()` は
+`beat` / `context` / `imagePath` だけです。狭い操作が広い型の要求を相続していました。
+
+**公開型が 2 つ増えます**（追加のみ・既存の変更なし）:
+
+```ts
+import type { BeatRenderParams, BeatPathParams } from "mulmocast";
+
+// BeatRenderParams = Pick<ImageProcessorParams, "beat" | "context" | "imageRefs">
+// BeatPathParams   = Pick<ImageProcessorParams, "beat" | "context" | "imagePath">
+```
+
+`ImageProcessorParams` 自体は変わりません。plugin テーブルと `findImagePlugin` は
+export していないため、パッケージ利用者の呼び出し側に影響はありません。
+
+**挙動は変わりません。** `mulmo images` を 8 スクリプト（markdown / textSlide / chart /
+mermaid / slide / image / movie / html_tailwind / voice_over / beat を網羅）で変更前後に
+流し、生成物 114 件のうち 113 件が byte 一致することを確認しています。残る 1 件は JS 駆動の
+描画で、変更前のツリーを 2 回走らせても毎回変わる非決定的なものです。
+
+### `yarn test` が 16 か月ぶりに動くようになりました
+
+`c5e6dd6b`（2025-05-02）が `src/audio.ts` などを `src/actions/` へ移した際に `test` script が
+取り残され、`ERR_MODULE_NOT_FOUND` で即死していました。CI は `ci_test` を使うため
+気づかれていませんでした。あわせて、このスクリプトが TTS / 画像生成の API キーを必要とする
+ことを CLAUDE.md に明記しました。
+
+### `test/` が型検査されるようになりました
+
+`tsconfig.json` の `include` が `src` だけだったため、テストの型は eslint しか見ていません
+でした。非ブロッキングの CI job で件数を可視化したうえで、**279 件あった型エラーを 0 件まで
+解消**しています。fixture がスキーマの通らない形（必須の `title` を欠いた textSlide、
+16 進でない色、`MulmoStudioContext` ではないモック）を使っていた箇所を、実在しうる形に
+直しました。
+
 ## [2.10.0](https://github.com/receptron/mulmocast-cli/releases/tag/2.10.0) (2026-08-22)
 
 ### AI を使わない beat を、ブラウザだけで HTML にできるようになりました
