@@ -8,13 +8,17 @@ import { writingMessage } from "../utils/file.js";
 import { MulmoStudioContextMethods } from "../methods/mulmo_studio_context.js";
 
 /**
- * The exported HTML document for a studio.
+ * The HTML document for a studio.
  *
- * Exported so the escaping below is reachable without writing a file: every value that
- * reaches an attribute or `<title>` comes from the script, and a beat with a
- * `source: { kind: "path" }` image puts the author's own path into `src`.
+ * Every value that reaches an attribute or `<title>` comes from the script, and a beat with a
+ * `source: { kind: "path" }` image puts the author's own path into `src`, so each one is
+ * escaped for the context it lands in.
+ *
+ * Not exported: `actions/index.ts` re-exports this module with `export *` and `index.node.ts`
+ * re-exports that, so anything exported here becomes public API of the published package. The
+ * tests drive it through `html()` instead.
  */
-export const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): string => {
+const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): string => {
   const { studio, multiLingual, lang = "en" } = context;
 
   const title = studio.script.title || "MulmoCast Content";
