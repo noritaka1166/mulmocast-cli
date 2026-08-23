@@ -8,7 +8,7 @@ import ffmpeg from "@modernized/fluent-ffmpeg";
 import { imagePreprocessAgent, beatFrameResolverAgent } from "../../src/actions/image_agents.js";
 import { ffmpegGetImageDimensions } from "../../src/utils/ffmpeg_utils.js";
 
-import { createMockContext, createMockBeat } from "./utils2.js";
+import { createMockContext, createMockBeat } from "./utils.js";
 
 const createSolidPng = (filePath: string, width: number, height: number): Promise<void> => {
   return new Promise((resolve, reject) => {

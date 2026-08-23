@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import type { MulmoBeat } from "../../src/types/index.js";
 import { imagePreprocessAgent } from "../../src/actions/image_agents.js";
 
-import { createMockContext, createMockBeat } from "./utils2.js";
+import { createMockContext, createMockBeat } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,7 +37,7 @@ test("imagePreprocessAgent - basic functionality", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -84,7 +84,7 @@ test("imagePreprocessAgent - with movie prompt and text", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     imagePath: "/test/images/test_studio/1p.png",
     imageFromMovie: true,
@@ -119,7 +119,7 @@ test("imagePreprocessAgent - movie prompt only (no image prompt)", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     imagePath: "/test/images/test_studio/2p.png",
     imageFromMovie: true,
@@ -182,7 +182,7 @@ test("imagePreprocessAgent - with imageNames", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: ["/path/to/image1.png", "/path/to/image2.png"],
     beatDuration: undefined,
@@ -231,7 +231,7 @@ test("imagePreprocessAgent - without imageNames (uses all imageRefs)", async () 
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: ["/path/to/image1.png", "/path/to/image2.png", "/path/to/image3.png"],
     beatDuration: undefined,
@@ -281,7 +281,7 @@ test("imagePreprocessAgent - filters undefined image references", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: ["/path/to/image1.png", "/path/to/image2.png"],
     beatDuration: undefined,
@@ -330,7 +330,7 @@ test("imagePreprocessAgent - merges beat and imageAgentInfo imageParams", async 
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -374,7 +374,7 @@ test("imagePreprocessAgent - empty imageRefs", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -425,7 +425,7 @@ test("imagePreprocessAgent - with real sample data", async () => {
       movieAgentInfo: {
         agent: "movieReplicateAgent",
         keyName: "REPLICATE_API_TOKEN",
-        movieParams: {},
+        movieParams: { provider: "replicate" },
       },
       referenceImages: [],
       beatDuration: undefined,
@@ -474,7 +474,7 @@ test("imagePreprocessAgent - text only", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -522,7 +522,7 @@ test("imagePreprocessAgent - imagePrompt only", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -568,7 +568,7 @@ test("imagePreprocessAgent - moviePrompt only", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     imageFromMovie: true,
     beatDuration: undefined,
@@ -606,7 +606,7 @@ test("imagePreprocessAgent - text + moviePrompt (no imagePrompt)", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     imageFromMovie: true,
     beatDuration: undefined,
@@ -644,7 +644,7 @@ test("imagePreprocessAgent - imagePrompt + moviePrompt (no text)", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -692,7 +692,7 @@ test("imagePreprocessAgent - text + imagePrompt + moviePrompt (all three)", asyn
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -739,7 +739,7 @@ test("imagePreprocessAgent - no text, no imagePrompt, no moviePrompt", async () 
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -786,7 +786,7 @@ test("imagePreprocessAgent - with both text and imagePrompt", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -848,7 +848,7 @@ test("imagePreprocessAgent - with imageParams override", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
   };
@@ -885,7 +885,7 @@ test("imagePreprocessAgent - with soundEffectPrompt only", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -935,7 +935,7 @@ test("imagePreprocessAgent - soundEffectPrompt + imagePrompt", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -995,7 +995,7 @@ test("imagePreprocessAgent - soundEffectPrompt + moviePrompt (no imagePrompt)", 
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     imageFromMovie: true,
     beatDuration: undefined,
@@ -1048,7 +1048,7 @@ test("imagePreprocessAgent - soundEffectPrompt + imagePrompt + moviePrompt", asy
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -1097,7 +1097,7 @@ test("imagePreprocessAgent - with enableLipSync true", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     lipSyncAgentName: "lipSyncReplicateAgent",
     lipSyncModel: "bytedance/omni-human",
@@ -1149,7 +1149,7 @@ test("imagePreprocessAgent - enableLipSync + imagePrompt", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     lipSyncAgentName: "lipSyncReplicateAgent",
     lipSyncModel: "bytedance/omni-human",
@@ -1204,7 +1204,7 @@ test("imagePreprocessAgent - enableLipSync + moviePrompt (no imagePrompt)", asyn
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     imageFromMovie: true,
     beatDuration: undefined,
@@ -1247,7 +1247,7 @@ test("imagePreprocessAgent - enableLipSync + imagePrompt + moviePrompt", async (
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     referenceImages: [],
     beatDuration: undefined,
@@ -1296,7 +1296,7 @@ test("imagePreprocessAgent - soundEffectPrompt + enableLipSync", async () => {
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     lipSyncAgentName: "lipSyncReplicateAgent",
     lipSyncModel: "bytedance/omni-human",
@@ -1350,7 +1350,7 @@ test("imagePreprocessAgent - soundEffectPrompt + enableLipSync + imagePrompt", a
     movieAgentInfo: {
       agent: "movieReplicateAgent",
       keyName: "REPLICATE_API_TOKEN",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
     },
     lipSyncAgentName: "lipSyncReplicateAgent",
     lipSyncModel: "bytedance/omni-human",
@@ -1418,7 +1418,7 @@ test("imagePreprocessAgent - soundEffectPrompt + enableLipSync + moviePrompt (no
     audioFile: path.resolve("/test/audio", "test_studio", "test_studio_09985548ed1c9252eee23cf0b0cd597ce98dd5975231a13cf6dc0840412bb142_en.mp3"),
     movieAgentInfo: {
       agent: "movieReplicateAgent",
-      movieParams: {},
+      movieParams: { provider: "replicate" },
       keyName: "REPLICATE_API_TOKEN",
     },
     imageFromMovie: true,
@@ -1472,7 +1472,7 @@ const expectedAllParametersResult = {
   movieAgentInfo: {
     agent: "movieReplicateAgent",
     keyName: "REPLICATE_API_TOKEN",
-    movieParams: {},
+    movieParams: { provider: "replicate" },
   },
 };
 
