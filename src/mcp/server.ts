@@ -20,8 +20,10 @@ dotenv.config({ quiet: true });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load MulmoScript JSON Schema from file
-const MULMO_SCRIPT_JSON_SCHEMA = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../assets/schemas/html_prompt.json"), "utf8"));
+// The `mulmoScript` argument's shape, as advertised to an MCP client. It is html_prompt.json,
+// not mulmo_script.json — the switch was deliberate, but the old name outlived it and is why
+// nobody noticed that mulmo_script.json had no reader left for fourteen months.
+const HTML_PROMPT_JSON_SCHEMA = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../assets/schemas/html_prompt.json"), "utf8"));
 
 const server = new Server(
   {
@@ -68,7 +70,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               enum: ["movie", "pdf"],
               description: "Command to execute: 'movie' to generate video, 'pdf' to generate PDF",
             },
-            mulmoScript: MULMO_SCRIPT_JSON_SCHEMA,
+            mulmoScript: HTML_PROMPT_JSON_SCHEMA,
             options: {
               type: "object",
               description: "Optional generation parameters",
