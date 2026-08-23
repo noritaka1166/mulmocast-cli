@@ -11,6 +11,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    // TS6 does not pick @types/node up implicitly here, and the compiler asks for this by name
+    // (TS2591 on `Buffer`). Root does the same in tsconfig.test.json.
+    "types": ["node"],
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],
