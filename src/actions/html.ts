@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { isNull } from "graphai";
-import { escapeHtml } from "@mulmocast/deck";
+import { escapeHtml, slideUtilityCss } from "@mulmocast/deck";
 import { MulmoStudioContext } from "../types/index.js";
 import { localizedText } from "../utils/utils.js";
 import { writingMessage } from "../utils/file.js";
@@ -71,6 +71,9 @@ const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Mermaid CDN -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <!-- The utilities every slide fragment is written against. Shared, so it belongs to the
+         page: a slide beat emits only its own scoped rules. -->
+    <style>${slideUtilityCss}</style>
   </head>
   <body class="min-h-screen flex flex-col">
 ${html}
