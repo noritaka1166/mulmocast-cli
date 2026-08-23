@@ -1,12 +1,20 @@
 import fs from "fs";
 import path from "path";
 import { isNull } from "graphai";
+import { escapeHtml } from "@mulmocast/deck";
 import { MulmoStudioContext } from "../types/index.js";
 import { localizedText } from "../utils/utils.js";
 import { writingMessage } from "../utils/file.js";
 import { MulmoStudioContextMethods } from "../methods/mulmo_studio_context.js";
 
-const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): string => {
+/**
+ * The exported HTML document for a studio.
+ *
+ * Exported so the escaping below is reachable without writing a file: every value that
+ * reaches an attribute or `<title>` comes from the script, and a beat with a
+ * `source: { kind: "path" }` image puts the author's own path into `src`.
+ */
+export const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): string => {
   const { studio, multiLingual, lang = "en" } = context;
 
   const title = studio.script.title || "MulmoCast Content";
@@ -26,11 +34,14 @@ const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): 
       if (studioBeat?.html) {
         html += `${studioBeat.html}\n\n`;
       } else if (studioBeat?.imageFile && isNull(studioBeat.html)) {
-        const imagePath = path.relative(context.fileDirs.outDirPath, studioBeat.imageFile);
-        const altText = `Beat ${index + 1}`;
+        // A `source: { kind: "path" }` beat puts the author's own path here, so it reaches an
+        // HTML attribute unfiltered unless it is escaped. Every value in these attributes goes
+        // through the same rule rather than each being argued safe on its own.
+        const imagePath = escapeHtml(path.relative(context.fileDirs.outDirPath, studioBeat.imageFile));
+        const altText = escapeHtml(`Beat ${index + 1}`);
         if (imageWidth) {
           // Use HTML img tag for width control
-          html += `<img src="${imagePath}" alt="${altText}" width="${imageWidth}" />\n\n`;
+          html += `<img src="${imagePath}" alt="${altText}" width="${escapeHtml(imageWidth)}" />\n\n`;
         } else {
           // Use standard html image syntax
           html += `<img src="${imagePath}" alt="${altText}" />\n\n`;
@@ -49,7 +60,7 @@ const generateHtmlContent = (context: MulmoStudioContext, imageWidth?: string): 
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${title}</title>
+    <title>${escapeHtml(title)}</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->

@@ -2,7 +2,7 @@ import { BackgroundImage, MulmoStudioContext, ImageProcessorParams } from "../..
 import { MulmoMediaSourceMethods } from "../../methods/mulmo_media_source.js";
 import { resolveStyle } from "./utils.js";
 import { safeFetch, DEFAULT_FETCH_TIMEOUT_MS } from "../fetch.js";
-import { neutralizeStyleTerminator } from "../html_escape.js";
+import { escapeCssString, neutralizeStyleTerminator } from "../html_escape.js";
 
 /**
  * Resolve background image from beat level and global level settings.
@@ -75,7 +75,11 @@ export const backgroundImageToCSS = async (backgroundImage: BackgroundImage | un
   }
 
   const isSimpleUrl = typeof backgroundImage === "string";
-  const imageUrl = isSimpleUrl ? await fetchUrlAsDataUrl(backgroundImage) : await MulmoMediaSourceMethods.toDataUrl(backgroundImage.source, context);
+  // The data URL carries a content-type the remote server chose, so a quote in it would end
+  // the CSS string this is placed in — the base64 body cannot, but the header can.
+  const imageUrl = escapeCssString(
+    isSimpleUrl ? await fetchUrlAsDataUrl(backgroundImage) : await MulmoMediaSourceMethods.toDataUrl(backgroundImage.source, context),
+  );
   const size = sizeToCSS(isSimpleUrl ? "cover" : (backgroundImage.size ?? "cover"));
   const opacity = isSimpleUrl ? 1 : (backgroundImage.opacity ?? 1);
 
