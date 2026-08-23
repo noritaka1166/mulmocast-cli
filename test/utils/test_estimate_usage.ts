@@ -3,12 +3,13 @@ import assert from "node:assert/strict";
 import { estimateUsage } from "../../src/utils/estimate_usage.js";
 import { mulmoScriptSchema } from "../../src/types/schema.js";
 import type { UsageEstimate } from "../../src/types/usage.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 type BeatInput = Record<string, unknown>;
 
 const makeScript = (beats: BeatInput[], extra: Record<string, unknown> = {}) => {
   return mulmoScriptSchema.parse({
-    $mulmocast: { version: "1.1" },
+    $mulmocast: { version: currentMulmoScriptVersion },
     lang: "en",
     speechParams: { speakers: { Presenter: { voiceId: "shimmer", displayName: { en: "Presenter" } } } },
     beats,

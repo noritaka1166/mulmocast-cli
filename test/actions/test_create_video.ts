@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { createVideo } from "../../src/actions/movie.js";
 import { MulmoScriptMethods } from "../../src/methods/index.js";
 import type { MulmoStudioContext, MulmoScript } from "../../src/types/index.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 // Helper function to create a minimal context from a script
 const createContextFromScript = (script: MulmoScript): MulmoStudioContext => {
@@ -61,7 +62,7 @@ test("test createVideo with fsd_demo.json in testMode", async () => {
 test("test createVideo filterComplex structure", async () => {
   // Create a minimal script with 2 beats
   const script = MulmoScriptMethods.validate({
-    $mulmocast: { version: "1.1" },
+    $mulmocast: { version: currentMulmoScriptVersion },
     lang: "en",
     title: "Test Video",
     beats: [
@@ -1084,7 +1085,7 @@ test("test createVideo with test_video_filters.json", async () => {
 // used to reference an undefined filtergraph pad ([undefined_last]) and crash ffmpeg.
 const createVoiceOverTransitionScript = (transitionType: string): MulmoScript =>
   ({
-    $mulmocast: { version: "1.1" },
+    $mulmocast: { version: currentMulmoScriptVersion },
     lang: "en",
     title: "Voice over with transition",
     beats: [
@@ -1155,7 +1156,7 @@ test("test createVideo with voice_over beat before a slidein transition", async 
 // video ends up shorter than the audio and everything after the first voice_over drifts.
 test("test createVideo covers the voice_over group when the movie is shorter than its audio", async () => {
   const script = {
-    $mulmocast: { version: "1.1" },
+    $mulmocast: { version: currentMulmoScriptVersion },
     lang: "en",
     title: "Voice over longer than the movie",
     beats: [

@@ -9,12 +9,13 @@ import { translateBeat, translate } from "../../src/actions/translate.js";
 
 import path from "path";
 import { fileURLToPath } from "url";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const testMulmoScript = MulmoScriptMethods.validate({
   $mulmocast: {
-    version: "1.0",
+    version: currentMulmoScriptVersion,
     credit: "closing",
   },
   title: "MASAI: A Modular Future for Software Engineering AI",

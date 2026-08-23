@@ -3,10 +3,11 @@ import test from "node:test";
 import assert from "node:assert";
 import { mulmoScriptSchema } from "../../src/types/schema.js";
 import { agentCallContext } from "../fixtures.js";
+import { currentMulmoScriptVersion } from "../../src/types/const.js";
 
 const validMulmoScriptJson = JSON.stringify({
   $mulmocast: {
-    version: "1.1",
+    version: currentMulmoScriptVersion,
     credit: "closing",
   },
   title: "Test Script",
