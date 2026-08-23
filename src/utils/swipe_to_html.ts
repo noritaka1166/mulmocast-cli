@@ -169,10 +169,18 @@ const elementToHtml = (el: SwipeElement, index: number): string => {
   return lines.join("\n");
 };
 
+/**
+ * The root the elements are positioned inside. Named so a browser host can give it a height:
+ * the root asks for 100% of its parent, and an inline height wins over any rule aimed at the
+ * root itself, so the parent is where the box has to come from. The document path has a
+ * viewport to fill and needs nothing.
+ */
+export const SWIPE_ROOT_ATTRIBUTE = "data-mulmo-swipe-root";
+
 /** Generate HTML from Swipe elements */
 export const swipeElementsToHtml = (elements: SwipeElement[]): string => {
   const html = elements.map((el, i) => elementToHtml(el, i)).join("\n");
-  return `<div style="position:relative; width:100%; height:100%; overflow:hidden;">\n${html}\n</div>`;
+  return `<div ${SWIPE_ROOT_ATTRIBUTE} style="position:relative; width:100%; height:100%; overflow:hidden;">\n${html}\n</div>`;
 };
 
 // --- Script generation for animations ---

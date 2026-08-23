@@ -22,7 +22,14 @@ export type BeatHtmlFragment = {
    * since it has no DOM and must stay dependency-light to remain bundleable.
    */
   html: string;
-  /** Rules the markup needs, scoped by the caller. Absent when the markup needs none. */
+  /**
+   * Rules the markup needs, scoped by the caller. Absent when the markup needs none.
+   *
+   * It cannot carry everything: an `html_tailwind` beat written with `elements` is a root
+   * asking for 100% of its parent, and how tall that parent should be is the host's layout,
+   * not the beat's. The root is marked `data-mulmo-swipe-root` so a host can give it one —
+   * and a host that does not gets an empty box, silently.
+   */
   css?: string;
   /** External runtimes the host must load once for the page, not once per beat. */
   requires?: BeatRuntime[];
