@@ -153,3 +153,30 @@ test("escapeCssString leaves every other character alone", () => {
   const ordinary = "https://example.com/a-b_c.png?x=1&y=2#z <>&";
   assert.strictEqual(escapeCssString(ordinary), ordinary);
 });
+
+/**
+ * A quoted Content-Type parameter is valid and non-hostile — `image/svg+xml;charset="utf-8"`
+ * is what a server may legitimately send — and it does NOT survive byte for byte, because the
+ * quote is exactly what has to be escaped. What survives is the value a CSS parser reads back,
+ * which is the property that matters and the one this pins. Raised by Codex in round 2 against
+ * a byte-for-byte claim that was true only of unquoted types.
+ */
+const cssUnescape = (value: string): string =>
+  value
+    .replace(/\\([\\'"])/g, "$1")
+    .replace(/\\a /g, "\n")
+    .replace(/\\d /g, "\r")
+    .replace(/\\c /g, "\f");
+
+test("a quoted content-type parameter changes bytes but not the URL CSS reads back", () => {
+  const url = 'data:image/svg+xml;charset="utf-8";base64,PHN2Zy8+';
+  const escaped = escapeCssString(url);
+  assert.notStrictEqual(escaped, url, "the quote must be escaped — that is the whole point");
+  assert.strictEqual(cssUnescape(escaped), url, "and the value survives the round trip");
+});
+
+test("the escapes this helper writes all round-trip", () => {
+  ["a'b", 'a"b', "a\\b", "a\nb", "a\rb", "a\fb", "'\"\\\n"].forEach((value) => {
+    assert.strictEqual(cssUnescape(escapeCssString(value)), value, JSON.stringify(value));
+  });
+});

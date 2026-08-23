@@ -67,6 +67,18 @@ test("a background image cannot break out of the url() it is placed in", async (
   assert.strictEqual(urlArgument(css), BREAKOUT.replace(/'/g, "\\'"), "the whole payload stays inside the string, quotes escaped");
 });
 
+/**
+ * `backgroundImageToCSS` has TWO url() sinks — this one, and the default branch above.
+ * Mutating them together says nothing about either: with only the default-branch test in
+ * place, removing the escape from line 98 alone left the suite green (25 pass / 0 fail),
+ * while removing it from line 114 alone went red. A sweep has to move one site at a time.
+ */
+test("the opacity branch cannot break out of its url() either", async () => {
+  const css = await resolveCombinedStyle(paramsWith(""), { source: { kind: "base64", data: BREAKOUT }, opacity: 0.5 }, undefined);
+  assert.ok(css.includes("body::before"), "this is the pseudo-element branch, not the default one");
+  assert.strictEqual(urlArgument(css), BREAKOUT.replace(/'/g, "\\'"), "the whole payload stays inside the string, quotes escaped");
+});
+
 test("an ordinary background image is emitted unescaped", async () => {
   const ordinary = "data:image/png;base64,iVBORw0KGgo=";
   const css = await resolveCombinedStyle(paramsWith(""), { source: { kind: "base64", data: ordinary } }, undefined);
