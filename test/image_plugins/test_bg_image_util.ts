@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert";
 import { resolveCombinedStyle } from "../../src/utils/image_plugins/bg_image_util.js";
 import { createMockContext } from "../actions/utils.js";
+import { cssUnescape } from "../css_unescape.js";
 
 /**
  * resolveCombinedStyle is the only producer of the CSS that chart, mermaid, markdown and
@@ -44,17 +45,19 @@ test("ordinary CSS passes through resolveCombinedStyle unchanged", async () => {
  * guard stops guarding without anything going red.
  *
  * `base64ToDataUrl` returns a value that already starts with `data:` verbatim, so this
- * reaches `url('...')` untouched and needs no network. It is also the reason the attack
+ * reaches `url('...')` untouched and needs no network. The fixture carries a backslash as
+ * well as quotes, because escaping the quote and not the backslash is exactly the mistake
+ * CodeQL's js/incomplete-sanitization names — the round trip is what proves both are handled. It is also the reason the attack
  * surface is not only a remote server's content-type header: an author's own base64 source
  * can carry the whole data URL.
  */
-const BREAKOUT = "data:image/png;');} body{display:none} .x{background:url('x";
+const BREAKOUT = "data:image/png;');} body{display:none} .x{background:url('x\\y";
 
 /** Where the CSS string opened by `url('` actually ends: the first quote CSS does not read as escaped. */
 const urlArgument = (css: string): string => {
   const start = css.indexOf("url('") + "url('".length;
-  // The fixture carries no backslash of its own, so a preceding backslash here is always one
-  // the escaper added.
+  // A preceding backslash is one the escaper added: the round-trip assertion below is what
+  // proves that, so this scan does not have to be a second escaper.
   for (let index = start; index < css.length; index++) {
     if (css[index] === "'" && css[index - 1] !== "\\") return css.slice(start, index);
   }
@@ -64,7 +67,7 @@ const urlArgument = (css: string): string => {
 test("a background image cannot break out of the url() it is placed in", async () => {
   const css = await resolveCombinedStyle(paramsWith(""), { source: { kind: "base64", data: BREAKOUT } }, undefined);
   assert.ok(css.includes("body{display:none}"), "the value is carried through, not stripped");
-  assert.strictEqual(urlArgument(css), BREAKOUT.replace(/'/g, "\\'"), "the whole payload stays inside the string, quotes escaped");
+  assert.strictEqual(cssUnescape(urlArgument(css)), BREAKOUT, "the whole payload stays inside the string and round-trips");
 });
 
 /**
@@ -76,7 +79,7 @@ test("a background image cannot break out of the url() it is placed in", async (
 test("the opacity branch cannot break out of its url() either", async () => {
   const css = await resolveCombinedStyle(paramsWith(""), { source: { kind: "base64", data: BREAKOUT }, opacity: 0.5 }, undefined);
   assert.ok(css.includes("body::before"), "this is the pseudo-element branch, not the default one");
-  assert.strictEqual(urlArgument(css), BREAKOUT.replace(/'/g, "\\'"), "the whole payload stays inside the string, quotes escaped");
+  assert.strictEqual(cssUnescape(urlArgument(css)), BREAKOUT, "the whole payload stays inside the string and round-trips");
 });
 
 test("an ordinary background image is emitted unescaped", async () => {

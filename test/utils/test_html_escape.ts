@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert";
 import { escapeCssString, escapeJsonForScript, neutralizeStyleTerminator } from "../../src/utils/html_escape.js";
+import { cssUnescape } from "../css_unescape.js";
 
 const LINE_SEPARATOR = " ";
 const PARAGRAPH_SEPARATOR = " ";
@@ -161,12 +162,6 @@ test("escapeCssString leaves every other character alone", () => {
  * which is the property that matters and the one this pins. Raised by Codex in round 2 against
  * a byte-for-byte claim that was true only of unquoted types.
  */
-const cssUnescape = (value: string): string =>
-  value
-    .replace(/\\([\\'"])/g, "$1")
-    .replace(/\\a /g, "\n")
-    .replace(/\\d /g, "\r")
-    .replace(/\\c /g, "\f");
 
 test("a quoted content-type parameter changes bytes but not the URL CSS reads back", () => {
   const url = 'data:image/svg+xml;charset="utf-8";base64,PHN2Zy8+';
