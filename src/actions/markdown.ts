@@ -4,6 +4,7 @@ import { localizedText } from "../utils/utils.js";
 import { writingMessage } from "../utils/file.js";
 import { MulmoStudioContextMethods } from "../methods/mulmo_studio_context.js";
 import path from "path";
+import { escapeHtml } from "@mulmocast/deck";
 
 const generateMarkdownContent = (context: MulmoStudioContext, imageWidth?: string): string => {
   const { studio, multiLingual, lang = "en" } = context;
@@ -27,9 +28,11 @@ const generateMarkdownContent = (context: MulmoStudioContext, imageWidth?: strin
       } else if (studioBeat?.imageFile) {
         const imagePath = path.relative(context.fileDirs.outDirPath, studioBeat.imageFile);
         if (imageWidth) {
-          // Use HTML img tag for width control
+          // An HTML tag is HTML wherever the markdown is rendered, and a
+          // `source: { kind: "path" }` beat puts the author's own path here — the same shape
+          // and the same input as the `<img>` in actions/html.ts.
           const altText = `Beat ${index + 1}`;
-          markdown += `<img src="${imagePath}" alt="${altText}" width="${imageWidth}" />\n\n`;
+          markdown += `<img src="${escapeHtml(imagePath)}" alt="${escapeHtml(altText)}" width="${escapeHtml(imageWidth)}" />\n\n`;
         } else {
           // Use standard markdown image syntax
           markdown += `![Beat ${index + 1}](${imagePath})\n\n`;
