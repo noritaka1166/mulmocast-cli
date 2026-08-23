@@ -1,19 +1,9 @@
 import test from "node:test";
 import assert from "node:assert";
-import type { GraphAI } from "graphai";
 import { imageOpenaiAgent, buildDeprecatedModelMessage } from "../../src/agents/image_openai_agent.js";
+import { agentCallContext } from "../fixtures.js";
 
-const baseParams = {
-  config: { apiKey: "fake-key-not-used" },
-  filterParams: {},
-  debugInfo: {
-    verbose: false,
-    nodeId: "",
-    state: "",
-    retry: 0,
-    subGraphs: new Map<string, GraphAI>(),
-  },
-};
+const baseParams = { ...agentCallContext, config: { apiKey: "fake-key-not-used" } };
 
 const canvasSize = { width: 1024, height: 1024 };
 

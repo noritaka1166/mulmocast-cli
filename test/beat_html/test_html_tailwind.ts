@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert";
 import { htmlTailwindToHtml } from "../../src/utils/beat_html/html_tailwind.js";
+import { imageProcessorParams } from "../fixtures.js";
+import { htmlTailwindMarkup } from "../../src/utils/image_plugins/html_tailwind_markup.js";
 import { requireImagePlugin } from "../image_plugins/utils.js";
 import { mulmoHtmlTailwindMediaSchema } from "../../src/types/schema.js";
 
@@ -54,9 +56,10 @@ test("and refused again at render time, for a caller that did not parse", () => 
 // path the pipeline reaches — but the guard decides what happens when someone bypasses it,
 // and before this PR `[null]` threw and `["str"]` rendered garbage from a string.
 test("elements that are not an array of objects fall back to html", () => {
-  const unparsed = (elements: unknown) => htmlTailwindToHtml({ type: "html_tailwind", elements, html: "<div>fallback</div>" });
+  // The guard is in htmlTailwindMarkup, whose parameter already declares `elements` as unknown.
+  const unparsed = (elements: unknown) => htmlTailwindMarkup({ elements, html: "<div>fallback</div>" });
   ["not-an-array", 7, {}, null, [null], ["str"], [undefined]].forEach((elements) => {
-    assert.strictEqual(unparsed(elements)?.html, "<div>fallback</div>", `${JSON.stringify(elements)} must fall back`);
+    assert.strictEqual(unparsed(elements), "<div>fallback</div>", `${JSON.stringify(elements)} must fall back`);
   });
 });
 
@@ -65,6 +68,6 @@ test("the fragment is the same markup the document dump produces", async () => {
   const plugin = requireImagePlugin("html_tailwind");
   for (const over of [{ html: "<div>a</div>" }, { html: ["a", "b"] }, { elements: [{ id: "p", text: "x" }] }]) {
     const image = media(over);
-    assert.strictEqual(htmlTailwindToHtml(image)!.html, await plugin.html!({ beat: { image } }), JSON.stringify(over));
+    assert.strictEqual(htmlTailwindToHtml(image)!.html, await plugin.html!(imageProcessorParams({ beat: { text: "", image } })), JSON.stringify(over));
   }
 });

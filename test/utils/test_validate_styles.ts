@@ -18,7 +18,7 @@ test("test presentation styles", async () => {
       const jsonData = JSON.parse(content);
       mulmoPresentationStyleSchema.parse(jsonData);
     } catch (error) {
-      assert.fail("Invalid style file: " + file + " " + error.message);
+      assert.fail("Invalid style file: " + file + " " + (error instanceof Error ? error.message : String(error)));
     }
   });
 });

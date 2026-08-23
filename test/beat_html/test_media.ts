@@ -26,7 +26,7 @@ test("a path is emitted for the host to resolve, a base64 source renders nothing
 });
 
 test("neither needs a runtime from the host", () => {
-  assert.strictEqual(imageToHtml(image(URL_SRC), "").requires, undefined);
+  assert.strictEqual(imageToHtml(image(URL_SRC), "")!.requires, undefined);
   assert.strictEqual(movieToHtml(movie({ kind: "url", url: "https://e.com/a.mp4" }))!.requires, undefined);
 });
 

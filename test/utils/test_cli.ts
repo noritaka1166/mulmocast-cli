@@ -3,6 +3,7 @@ import assert from "node:assert";
 
 import { getFileObject } from "../../src/cli/helpers.js";
 import { createStudioData } from "../../src/utils/context.js";
+import { MulmoScriptMethods } from "../../src/methods/index.js";
 import { MulmoStudioContextMethods } from "../../src/methods/mulmo_studio_context.js";
 import type { MulmoStudioContext } from "../../src/types/index.js";
 
@@ -85,14 +86,14 @@ test("test getImageProjectDirPath without grouped", async () => {
 
 test("test createStudioData", async () => {
   const studio = createStudioData(
-    {
+    MulmoScriptMethods.validate({
       $mulmocast: {
         version: "1.1",
         credit: "closing",
       },
       lang: "en",
       beats: [{ text: "hello" }],
-    },
+    }),
     "",
   );
   // console.log(JSON.stringify(ret));
@@ -141,7 +142,7 @@ test("test createStudioData", async () => {
 
 test("test createStudioData", async () => {
   const studio = createStudioData(
-    {
+    MulmoScriptMethods.validate({
       $mulmocast: {
         version: "1.1",
         credit: "closing",
@@ -149,7 +150,7 @@ test("test createStudioData", async () => {
       lang: "en",
       speechParams: { speakers: { Test: { displayName: { en: "Test" }, voiceId: "shimmer", provider: "openai" } } },
       beats: [{ text: "hello" }],
-    },
+    }),
     "",
   );
   // console.log(JSON.stringify(ret));

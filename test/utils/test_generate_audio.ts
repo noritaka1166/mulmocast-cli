@@ -6,6 +6,7 @@ import { currentMulmoScriptVersion } from "../../src/types/const.js";
 import { movieGenAIAgent } from "../../src/agents/movie_genai_agent.js";
 import { movieReplicateAgent } from "../../src/agents/movie_replicate_agent.js";
 import { apiErrorType, hasCause, imageAction, unsupportedModelTarget } from "../../src/utils/error_cause.js";
+import { agentCallContext } from "../fixtures.js";
 
 // Test: generateAudio schema validation
 test("generateAudio: true is valid in movieParams", () => {
@@ -52,7 +53,7 @@ test("generateAudio: string is invalid", () => {
 });
 
 // Test: provider2agent audio metadata (table-driven)
-const replicateAudioTests: { model: string; mode: string; param?: string }[] = [
+const replicateAudioTests: { model: `${string}/${string}`; mode: string; param?: string }[] = [
   { model: "kwaivgi/kling-v3-video", mode: AUDIO_MODE_OPTIONAL, param: "generate_audio" },
   { model: "kwaivgi/kling-v3-omni-video", mode: AUDIO_MODE_OPTIONAL, param: "generate_audio" },
   { model: "google/veo-3", mode: AUDIO_MODE_OPTIONAL, param: "generate_audio" },
@@ -92,6 +93,7 @@ test("movieGenAIAgent rejects generateAudio=true for never-audio model", async (
   await assert.rejects(
     () =>
       movieGenAIAgent({
+        ...agentCallContext,
         namedInputs: {
           prompt: "A calm ocean at sunset",
           movieFile: "output/test/test_genai_audio.mp4",
@@ -121,6 +123,7 @@ test("movieReplicateAgent rejects generateAudio=true for never-audio model", asy
   await assert.rejects(
     () =>
       movieReplicateAgent({
+        ...agentCallContext,
         namedInputs: {
           prompt: "A calm ocean at sunset",
           movieFile: "output/test/test_replicate_audio.mp4",

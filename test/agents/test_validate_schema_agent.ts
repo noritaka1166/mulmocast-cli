@@ -1,8 +1,8 @@
 import validateSchemaAgent from "../../src/agents/validate_schema_agent.js";
 import test from "node:test";
 import assert from "node:assert";
-import type { GraphAI } from "graphai";
 import { mulmoScriptSchema } from "../../src/types/schema.js";
+import { agentCallContext } from "../fixtures.js";
 
 const validMulmoScriptJson = JSON.stringify({
   $mulmocast: {
@@ -63,17 +63,7 @@ const invalidMulmoScriptJson = JSON.stringify({
   beats: [],
 });
 
-const baseParams = {
-  params: {},
-  debugInfo: {
-    verbose: false,
-    nodeId: "",
-    state: "",
-    retry: 0,
-    subGraphs: new Map<string, GraphAI>(),
-  },
-  filterParams: {},
-};
+const baseParams = { ...agentCallContext, params: {} };
 
 test("validateSchemaAgent with valid MulmoScript", async () => {
   const result = await validateSchemaAgent.agent({
