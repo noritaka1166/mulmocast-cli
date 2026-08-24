@@ -106,7 +106,7 @@
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@modernized/fluent-ffmpeg": "^1.0.3",
     "@mozilla/readability": "^0.6.0",
-    "@mulmocast/deck": "^2.0.0",
+    "@mulmocast/deck": "^2.0.1",
     "@tavily/core": "^0.7.6",
     "archiver": "^8.0.0",
     "clipboardy": "^5.3.2",
@@ -114,7 +114,7 @@
     "graphai": "^2.0.18",
     "js-tiktoken": "^1.0.21",
     "jsdom": "^29.1.1",
-    "marked": "^18.0.10",
+    "marked": "^18.0.11",
     "mulmocast-vision": "^1.0.12",
     "ora": "^9.4.1",
     "puppeteer": "^25.8.0",
@@ -128,11 +128,11 @@
     "@receptron/test_utils": "^2.0.3",
     "@types/archiver": "^8.0.0",
     "@types/jsdom": "^28.0.3",
-    "@types/node": "^26.0.0",
+    "@types/node": "^26.3.0",
     "@types/yargs": "^17.0.35",
     "cross-env": "^10.1.0",
     "esbuild": "^0.28.2",
-    "eslint": "^10.8.1",
+    "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.6",
@@ -141,7 +141,7 @@
     "prettier": "^3.9.6",
     "tsx": "^4.23.12",
     "typescript": "6.0.3",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.68.0"
   },
   "engines": {
     "node": ">=22.0.0"
